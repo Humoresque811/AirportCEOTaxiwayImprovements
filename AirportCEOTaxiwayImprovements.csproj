@@ -22,6 +22,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Reference Include="AirportCEOModLoader">
+      <HintPath>lib\AirportCEOModLoader.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>lib\Assembly-CSharp-publicized.dll</HintPath>
     </Reference>

@@ -32,6 +32,5 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
         //Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} finished setting up config.");
 
         TextureManager.LoadTextures();
-        DiagonalTaxiwaysPatch.FinalCallAction(false, true);
     }
 }

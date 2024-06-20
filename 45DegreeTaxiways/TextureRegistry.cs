@@ -92,9 +92,25 @@ internal static class TextureRegistry
     {
         Transform obj = GetBasicTile(rotation, node);
 
-        Texture2D texture = foundationType == Enums.FoundationType.Asphalt ? TextureManager.AsphaltTri : TextureManager.ConcreteTri;
-        SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
-        renderer.sprite = TextureManager.CombineTextureCache(ref texture, ref TextureManager.VerticalCurveOutOf);
+        obj.GetComponent<SpriteRenderer>().sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltVerticalCurveOutOf : ConcreteVerticalCurveOutOf;
+    }
+    internal static void ApplyHorizontalCurveOut(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
+    {
+        Transform obj = GetBasicTile(rotation, node);
+
+        obj.GetComponent<SpriteRenderer>().sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltHorizontalCurveOutOf : ConcreteHorizontalCurveOutOf;
+    }
+    internal static void ApplyVerticalCurveInto(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
+    {
+        Transform obj = GetBasicTile(rotation, node);
+
+        obj.GetComponent<SpriteRenderer>().sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltVerticalCurveInto : ConcreteVerticalCurveInto;
+    }
+    internal static void ApplyHorizontalCurveInto(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
+    {
+        Transform obj = GetBasicTile(rotation, node);
+
+        obj.GetComponent<SpriteRenderer>().sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltHorizontalCurveInto : ConcreteHorizontalCurveInto;
     }
     private static Transform GetBasicTile(int rotation, TaxiwayBuilderNode node)
     {
@@ -107,7 +123,8 @@ internal static class TextureRegistry
 
     internal static void ApplyTaxiwayEdgePlain(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
-        node.InstantiateTaxiwayPiece(DPS.GetTaxiwayEdge(foundationType, Enums.TaxiwayBuilderType.Plain), rotation);
+        // Dont actually do anything here!
+        //node.InstantiateTaxiwayPiece(DPS.GetTaxiwayEdge(foundationType, Enums.TaxiwayBuilderType.Plain), rotation);
     }
     internal static void ApplyTaxiwayEdgeCornerEdge(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
@@ -115,10 +132,12 @@ internal static class TextureRegistry
     }
     internal static void ApplyTaxiwayEdgeTurnEdge(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
+        rotation -= 180;
         node.InstantiateTaxiwayPiece(DPS.GetTaxiwayEdge(foundationType, Enums.TaxiwayBuilderType.TurnEdge), rotation);
     }
     internal static void ApplyTaxiwayEdgeStraightEdge(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
+        rotation -= 180;
         node.InstantiateTaxiwayPiece(DPS.GetTaxiwayEdge(foundationType, Enums.TaxiwayBuilderType.StraightEdge), rotation);
     }
 

@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using AirportCEOModLoader.Core;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,149 +24,74 @@ public static class DiagonalTaxiwaysPatch
 	[HarmonyPrefix]
 	public static bool _45DegreePatch(TaxiwayBuilderNode __instance)
 	{
-		//if (!Singleton<TiledObjectsManager>.Instance.ContainsTileable(__instance.worldPosition))
-		//{
-		//	Singleton<TiledObjectsManager>.Instance.AddTileable(TextureRegistry.associatedTiles[__instance]);
-		//}
-
-		if (__instance.taxiwayType != (Enums.TaxiwayBuilderType)4)
+		try
 		{
 			if (__instance.foundationType == Enums.FoundationType.Grass)
 			{
 				// We ain't touching it then
 				return true;
 			}
-		}
 
-		__instance.GetConnectors();
-		__instance.connectionBottomLeft =  __instance.connectors[0];
-		__instance.connectionLeft =        __instance.connectors[1];
-		__instance.connectionTopLeft =     __instance.connectors[2];
-		__instance.connectionBack =        __instance.connectors[3];
-		__instance.connectionFront =       __instance.connectors[4];
-		__instance.connectionBottomRight = __instance.connectors[5];
-		__instance.connectionRight =       __instance.connectors[6];
-		__instance.connectionTopRight =    __instance.connectors[7];
-		__instance.taxiwayType = Enums.TaxiwayBuilderType.Plain;
-		try
-		{
-			for (int i = 0; i < __instance.taxiwayLines.childCount; i++)
+			__instance.GetConnectors();
+			__instance.connectionBottomLeft = __instance.connectors[0];
+			__instance.connectionLeft = __instance.connectors[1];
+			__instance.connectionTopLeft = __instance.connectors[2];
+			__instance.connectionBack = __instance.connectors[3];
+			__instance.connectionFront = __instance.connectors[4];
+			__instance.connectionBottomRight = __instance.connectors[5];
+			__instance.connectionRight = __instance.connectors[6];
+			__instance.connectionTopRight = __instance.connectors[7];
+			__instance.taxiwayType = Enums.TaxiwayBuilderType.Plain;
+			try
 			{
-				UnityEngine.Object.Destroy(__instance.taxiwayLines.GetChild(i).gameObject);
+				for (int i = 0; i < __instance.taxiwayLines.childCount; i++)
+				{
+					UnityEngine.Object.Destroy(__instance.taxiwayLines.GetChild(i).gameObject);
+				}
 			}
-		}
-		catch (Exception)
-		{
-		}
+			catch (Exception)
+			{
+			}
 
-		if (!__instance.enableBuilder)
+			if (!__instance.enableBuilder)
+			{
+				return true;
+			}
+
+			int count = 0;
+			foreach (bool connection in __instance.connectors)
+			{
+				count += connection ? 1 : 0;
+			}
+
+			bool[] newConnectorsArray = new bool[12];
+			ImportBasicConnections(ref newConnectorsArray, ref __instance.connectors);
+			FindNewConnections(ref newConnectorsArray, __instance);
+
+			Action<Enums.FoundationType, int, TaxiwayBuilderNode> action = null;
+			Action<Enums.FoundationType, int, TaxiwayBuilderNode> actionToCompareTo = TextureRegistry.ApplyTaxiwayEdgePlain;
+
+			for (int i = 0; i < 360; i += 90)
+			{
+				action = FinalAction(count, newConnectorsArray);
+				if (action.Method != actionToCompareTo.Method)
+				{
+					action(__instance.foundationType, i, __instance);
+					break;
+				}
+				newConnectorsArray.RotateConnections();
+			}
+			if (action.Method == actionToCompareTo.Method)
+			{
+				action(__instance.foundationType, 0, __instance);
+			}
+			return false;
+		}
+		catch (Exception ex)
 		{
+			AirportCEOTaxiwayImprovements.TILogger.LogError($"Error as expected {ExceptionUtils.ProccessException(ex)}");
 			return true;
 		}
-
-		int count = 0;
-		foreach (bool connection in __instance.connectors)
-		{
-			count += connection ? 1 : 0;
-		}
-
-		if (count == 0 || count == 1 || count == 2 || count == 8)
-		{
-			// Its blank, nothing needs to be done!
-			return true;
-		}
-		// Start Test Block
-
-		if (count == 3)
-		{
-
-			if (__instance.connectionFront && __instance.connectionTopLeft && __instance.connectionLeft)
-			{
-				__instance.taxiwayType = Enums.TaxiwayBuilderType.CornerEdge;
-				__instance.InstantiateTaxiwayPiece(DPS.GetTaxiwayEdge(__instance.foundationType, __instance.taxiwayType), 90);
-			}
-			else if (__instance.connectionBack && __instance.connectionBottomLeft && __instance.connectionLeft)
-			{
-				__instance.taxiwayType = Enums.TaxiwayBuilderType.CornerEdge;
-				__instance.InstantiateTaxiwayPiece(DPS.GetTaxiwayEdge(__instance.foundationType, __instance.taxiwayType), 180);
-			}
-			else if (__instance.connectionBack && __instance.connectionBottomRight && __instance.connectionRight)
-			{
-				__instance.taxiwayType = Enums.TaxiwayBuilderType.CornerEdge;
-				__instance.InstantiateTaxiwayPiece(DPS.GetTaxiwayEdge(__instance.foundationType, __instance.taxiwayType), 270);
-			}
-			else
-			{
-				__instance.taxiwayType = Enums.TaxiwayBuilderType.CornerEdge;
-				__instance.InstantiateTaxiwayPiece(DPS.GetTaxiwayEdge(__instance.foundationType, __instance.taxiwayType), 0);
-			}
-			return false;
-		}
-		if (count == 4)
-		{
-			if ((__instance.connectionBack && __instance.connectionBottomLeft && __instance.connectionBottomRight && __instance.connectionRight) ||
-				(__instance.connectionBack && __instance.connectionTopRight && __instance.connectionBottomRight && __instance.connectionRight))
-			{
-				__instance.taxiwayType = (Enums.TaxiwayBuilderType)4;
-				TextureRegistry.ApplySmallTri(__instance.foundationType, 0, __instance);
-			}
-			else if ((__instance.connectionBack && __instance.connectionBottomLeft && __instance.connectionBottomRight && __instance.connectionLeft) || 
-				(__instance.connectionBack && __instance.connectionBottomLeft && __instance.connectionLeft && __instance.connectionTopLeft))
-			{
-				__instance.taxiwayType = (Enums.TaxiwayBuilderType)4;
-				TextureRegistry.ApplySmallTri(__instance.foundationType, 270, __instance);
-			}
-			else if ((__instance.connectionLeft && __instance.connectionTopLeft && __instance.connectionFront && __instance.connectionTopRight) || 
-				(__instance.connectionLeft && __instance.connectionTopLeft && __instance.connectionFront && __instance.connectionBottomLeft))
-			{
-				__instance.taxiwayType = (Enums.TaxiwayBuilderType)4;
-				TextureRegistry.ApplySmallTri(__instance.foundationType, 180, __instance);
-			}
-			else if ((__instance.connectionTopRight && __instance.connectionFront && __instance.connectionTopLeft && __instance.connectionRight) || 
-				(__instance.connectionTopRight && __instance.connectionFront && __instance.connectionBottomRight && __instance.connectionRight))
-			{
-				__instance.taxiwayType = (Enums.TaxiwayBuilderType)4;
-				TextureRegistry.ApplySmallTri(__instance.foundationType, 90, __instance);
-			}
-
-			return false;
-		}
-		if (count == 5)
-		{
-			if (!__instance.connectionLeft && !__instance.connectionTopLeft && !__instance.connectionFront)
-			{
-				__instance.taxiwayType = (Enums.TaxiwayBuilderType)5;
-				TextureRegistry.ApplySmallTri(__instance.foundationType, 0, __instance);
-				return false;
-			}
-		}
-		if (count == 7)
-		{
-			int rotation = 0;
-			if (!__instance.connectionTopLeft) { rotation = 0; }
-			if (!__instance.connectionTopRight) { rotation = 90; }
-			if (!__instance.connectionBottomRight) { rotation = 180; }
-			if (!__instance.connectionBottomLeft) { rotation = 270; }
-
-			Vector2 tester = new Vector2(__instance.transform.position.x - 8, __instance.transform.position.y);
-
-			if (Singleton<TaxiwayController>.Instance.TryGetBuilderNodeAtPostion(tester, out var _))
-			{
-				__instance.taxiwayType = (Enums.TaxiwayBuilderType)5;
-				TextureRegistry.ApplyHorizCurveInto(__instance.foundationType, rotation, __instance);
-			}
-			else
-			{
-				__instance.taxiwayType = (Enums.TaxiwayBuilderType)5;
-				TextureRegistry.ApplyFullDia(__instance.foundationType, rotation, __instance);
-			}
-
-			return false;
-		}
-
-
-		return true;
-
 	}
 
 	public static Action<Enums.FoundationType, int, TaxiwayBuilderNode> FinalAction(int connections, bool[] newConnectionsArray) =>
@@ -173,12 +99,27 @@ public static class DiagonalTaxiwaysPatch
 		newConnectionsArray[4], newConnectionsArray[5], newConnectionsArray[6], newConnectionsArray[7],
 		newConnectionsArray[8], newConnectionsArray[9], newConnectionsArray[10], newConnectionsArray[11]) switch
 		{
-			(0, _, _, _, _, _, _, _, _, _, _, _, _ ) => TextureRegistry.ApplyTaxiwayEdgePlain,
+			(7, _, _, false, _, _, _, _, _, true, true, true, true) => TextureRegistry.ApplyTaxiwayEdgeTurnEdge,
+			(7, _, _, _, _, false, _, _, _, true, _, _, true) => TextureRegistry.ApplyTaxiwayEdgeStraightEdge,
+			(7, _, _, false, _, _, _, _, _, true, _, _, _) => TextureRegistry.ApplyHorizontalCurveInto,
+			(5, _, _, _, true, true, true, true, true, _, _, false, _ ) => TextureRegistry.ApplyVerticalCurveOut,
+			(5, true, true, _, true, _, true, true, _, false, _, _, _ ) => TextureRegistry.ApplyHorizontalCurveOut,
+			(5, true, true, _, true, _, true, true, _, true, _, _, true) => TextureRegistry.ApplyTaxiwayEdgeStraightEdge,
+			(6, true, true, _, true, _, true, true, _, true, _, _, true) => TextureRegistry.ApplyTaxiwayEdgeStraightEdge,
+			(6, true, _, _, true, true, true, true, true, _, _, false, _) => TextureRegistry.ApplyVerticalCurveOut,
+			(6, true, true, _, true, _, true, true, true, false, _, _, _) => TextureRegistry.ApplyHorizontalCurveOut,
+			(7, _, _, false, _, _, _, _, _, _, _, true, _) => TextureRegistry.ApplyVerticalCurveInto,
+			(7, _, _, false, _, _, _, _, _, _, _, _, _) => TextureRegistry.ApplyFullDia,
+			(3, _, _, _, true, _, true, true, _, _, _, _, _ ) => TextureRegistry.ApplySmallTri,
+			(4, true, _, _, true, _, true, true, _, _, _, _, _ ) => TextureRegistry.ApplySmallTri,
+			(4, _, _, _, true, _, true, true, true, _, _, _, _ ) => TextureRegistry.ApplySmallTri,
+			(5, true, _, _, true, _, true, true, true, _, _, _, _ ) => TextureRegistry.ApplySmallTri,
 			_ => TextureRegistry.ApplyTaxiwayEdgePlain,
 		};
 
 	private static bool[] RotateConnections(this bool[] newConnectionsArray)
 	{
+		// See humoresques magic table for why this is this way
 		bool[] output = new bool[12];
 		output[2] = newConnectionsArray[0];
 		output[4] = newConnectionsArray[1];
@@ -193,7 +134,28 @@ public static class DiagonalTaxiwaysPatch
 		output[11] = newConnectionsArray[10];
 		output[9] = newConnectionsArray[11];
 
+        for (int i = 0; i < output.Length; i++)
+		{
+			newConnectionsArray[i] = output[i];
+        }
+
 		return output;
+	}
+
+	private static void ImportBasicConnections(ref bool[] newConnections, ref bool[] originalConnections)
+	{
+        for (int i = 0; i < originalConnections.Length; i++)
+		{
+			newConnections[i] = originalConnections[i];
+        }
+	}
+
+	private static void FindNewConnections(ref bool[] newConnections, TaxiwayBuilderNode node)
+	{
+		newConnections[8] = Singleton<TaxiwayController>.Instance.TryGetBuilderNodeAtPostion(new Vector2(node.connector.position.x - 8, node.connector.position.y), out var _);
+		newConnections[9] = Singleton<TaxiwayController>.Instance.TryGetBuilderNodeAtPostion(new Vector2(node.connector.position.x, node.connector.position.y - 8), out var _);
+		newConnections[10] = Singleton<TaxiwayController>.Instance.TryGetBuilderNodeAtPostion(new Vector2(node.connector.position.x, node.connector.position.y + 8 ), out var _);
+		newConnections[11] = Singleton<TaxiwayController>.Instance.TryGetBuilderNodeAtPostion(new Vector2(node.connector.position.x + 8, node.connector.position.y), out var _);
 	}
 
 	private static DataPlaceholderStructures DPS = SingletonNonDestroy<DataPlaceholderStructures>.Instance;
