@@ -138,6 +138,9 @@ internal class TextureManager
         }
 
         emptyTex.Apply(true, true);
-        return Sprite.Create(emptyTex, new Rect(0, 0, emptyTex.width, emptyTex.height), Vector2.one / 2f, 256, 0u, SpriteMeshType.FullRect);
+        emptyTex.filterMode = FilterMode.Bilinear;
+        emptyTex.wrapMode = TextureWrapMode.Clamp;
+        Sprite sprite = Sprite.Create(emptyTex, new Rect(0, 0, emptyTex.width, emptyTex.height), Vector2.one / 2f, 256, 0u, SpriteMeshType.FullRect);
+        return sprite;
     }
 }

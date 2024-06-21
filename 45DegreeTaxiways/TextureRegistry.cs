@@ -54,7 +54,7 @@ internal static class TextureRegistry
 
     internal static void ApplySmallTri(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
-        Transform obj = GetBasicTile(rotation, node);
+        Transform obj = GetBasicTile(foundationType, rotation, node);
 
         SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
         renderer.sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltDiagonalHalf : ConcreteDiagonalHalf;
@@ -62,26 +62,23 @@ internal static class TextureRegistry
 
         try
         {
-            //if (node.taxiwayType == (Enums.TaxiwayBuilderType)4)
-            //{
-            //    associatedTiles[node].Quality = 0;
-            //}
+            associatedTiles[node].quality = 4;
         }
         catch (Exception ex)
         {
-            AirportCEOTaxiwayImprovements.TILogger.LogError($"Error in the set off part. {ex.Message}");
+            AirportCEOTaxiwayImprovements.TILogger.LogError($"Unable to set part. {ex.Message}");
         }
     }
     internal static void ApplyFullDia(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
-        Transform obj = GetBasicTile(rotation, node);
+        Transform obj = GetBasicTile(foundationType, rotation, node);
 
         SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
         renderer.sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltDiagonalFull : ConcreteDiagonalFull;
     }
     internal static void ApplyHorizCurveInto(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
-        Transform obj = GetBasicTile(rotation, node);
+        Transform obj = GetBasicTile(foundationType, rotation, node);
 
         SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
         renderer.sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltHorizontalCurveInto : ConcreteHorizontalCurveInto;
@@ -90,33 +87,43 @@ internal static class TextureRegistry
 
     internal static void ApplyVerticalCurveOut(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
-        Transform obj = GetBasicTile(rotation, node);
+        Transform obj = GetBasicTile(foundationType, rotation, node);
 
         obj.GetComponent<SpriteRenderer>().sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltVerticalCurveOutOf : ConcreteVerticalCurveOutOf;
     }
     internal static void ApplyHorizontalCurveOut(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
-        Transform obj = GetBasicTile(rotation, node);
+        Transform obj = GetBasicTile(foundationType, rotation, node);
 
         obj.GetComponent<SpriteRenderer>().sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltHorizontalCurveOutOf : ConcreteHorizontalCurveOutOf;
     }
     internal static void ApplyVerticalCurveInto(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
-        Transform obj = GetBasicTile(rotation, node);
+        Transform obj = GetBasicTile(foundationType, rotation, node);
 
         obj.GetComponent<SpriteRenderer>().sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltVerticalCurveInto : ConcreteVerticalCurveInto;
     }
     internal static void ApplyHorizontalCurveInto(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
-        Transform obj = GetBasicTile(rotation, node);
+        Transform obj = GetBasicTile(foundationType, rotation, node);
 
         obj.GetComponent<SpriteRenderer>().sprite = foundationType == Enums.FoundationType.Asphalt ? AsphaltHorizontalCurveInto : ConcreteHorizontalCurveInto;
     }
-    private static Transform GetBasicTile(int rotation, TaxiwayBuilderNode node)
+    private static Transform GetBasicTile(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
     {
         Transform obj = GameObject.Instantiate(SingletonNonDestroy<DataPlaceholderStructures>.Instance.GetTaxiwayEdge(Enums.FoundationType.Asphalt, Enums.TaxiwayBuilderType.StraightEdge), node.transform).transform;
         obj.eulerAngles = new Vector3(0f, 0f, rotation);
         obj.localPosition = new Vector3(0f, 0f, 0.001f);
+
+        try
+        {
+            associatedTiles[node].quality = (byte)foundationType;
+        }
+        catch (Exception ex)
+        {
+            AirportCEOTaxiwayImprovements.TILogger.LogError($"Unable to set part. {ex.Message}");
+        }
+
         return obj;
     }
 
