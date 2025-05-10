@@ -27,24 +27,44 @@ internal class TextureManager
     internal static Texture2D AsphaltFull;
     internal static Texture2D AsphaltTri;
 
-    private static readonly string basePath = "C:\\My Stuff\\ACEO Texture Work\\Airport CEO Textures\\Rebuilt 45 Degree Mod\\AirporCEOTaxiwayImprovements";
+    internal static Texture2D AsphaltEntranceFast;
+    internal static Texture2D AsphaltEntranceFastLarge;
 
-    internal static void LoadTextures()
+    internal static Texture2D ConcreteEntranceFast;
+    internal static Texture2D ConcreteEntranceFastLarge;
+
+    internal static Texture2D EndCap;
+
+    internal static void LoadTextures(string directoryPath)
     {
-        VerticalCurveInto = LoadTexture(Path.Combine(basePath, "VerticalCurveInto.png"));
-        HorizontalCurveInto = LoadTexture(Path.Combine(basePath, "HorizontalCurveInto.png"));
+        if (!string.IsNullOrEmpty(AirportCEOTaxiwayImprovementConfig.AlternateLoadingPath.Value))
+        {
+            directoryPath = AirportCEOTaxiwayImprovementConfig.AlternateLoadingPath.Value.Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar).Trim(' ');
+        }
 
-        VerticalCurveOutOf = LoadTexture(Path.Combine(basePath, "VerticalCurveOutOf.png"));
-        HorizontalCurveOutOf = LoadTexture(Path.Combine(basePath, "HorizontalCurveOutOf.png"));
+        AirportCEOTaxiwayImprovements.TILogger.LogInfo($"Path to load textures {directoryPath}");
 
-        DiagonalHalf = LoadTexture(Path.Combine(basePath, "DiagonalHalf.png"));
-        DiagonalFull = LoadTexture(Path.Combine(basePath, "DiagonalFull.png"));
+        VerticalCurveInto = LoadTexture(Path.Combine(directoryPath, "VerticalCurveInto.png"));
+        HorizontalCurveInto = LoadTexture(Path.Combine(directoryPath, "HorizontalCurveInto.png"));
 
-        ConcreteFull = LoadTexture(Path.Combine(basePath, "ConcreteFull.png"));
-        ConcreteTri = LoadTexture(Path.Combine(basePath, "ConcreteTri.png"));
+        VerticalCurveOutOf = LoadTexture(Path.Combine(directoryPath, "VerticalCurveOutOf.png"));
+        HorizontalCurveOutOf = LoadTexture(Path.Combine(directoryPath, "HorizontalCurveOutOf.png"));
 
-        AsphaltFull = LoadTexture(Path.Combine(basePath, "AsphaltFull.png"));
-        AsphaltTri = LoadTexture(Path.Combine(basePath, "AsphaltTri.png"));
+        DiagonalHalf = LoadTexture(Path.Combine(directoryPath, "DiagonalHalf.png"));
+        DiagonalFull = LoadTexture(Path.Combine(directoryPath, "DiagonalFull.png"));
+
+        ConcreteFull = LoadTexture(Path.Combine(directoryPath, "ConcreteFull.png"));
+        ConcreteTri = LoadTexture(Path.Combine(directoryPath, "ConcreteTri.png"));
+
+        AsphaltFull = LoadTexture(Path.Combine(directoryPath, "AsphaltFull.png"));
+        AsphaltTri = LoadTexture(Path.Combine(directoryPath, "AsphaltTri.png"));
+
+        EndCap = LoadTexture(Path.Combine(directoryPath, "EndCap.png"));
+
+        AsphaltEntranceFast = LoadTexture(Path.Combine(directoryPath, "FastAsphalt.png"));
+        AsphaltEntranceFastLarge = LoadTexture(Path.Combine(directoryPath, "FastAsphaltLarge.png"));
+        ConcreteEntranceFast = LoadTexture(Path.Combine(directoryPath, "FastConcrete.png"));
+        ConcreteEntranceFastLarge = LoadTexture(Path.Combine(directoryPath, "FastConcreteLarge.png"));
 
         TextureRegistry.Init();
         AirportCEOTaxiwayImprovements.TILogger.LogMessage("Completed texture loading successfully!");
@@ -56,9 +76,11 @@ internal class TextureManager
 	    if (File.Exists(filePath))
 	    {
 		    byte[] data = File.ReadAllBytes(filePath);
-		    Texture2D texture2D = new Texture2D(2, 2, TextureFormat.ARGB32, false)
+		    Texture2D texture2D = new Texture2D(2, 2, TextureFormat.ARGB32, true)
 		    {
-			    filterMode = FilterMode.Bilinear
+			    filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp,
+                loadAllMips = true,
 		    };
 		    texture2D.LoadImage(data);
 		    if (GameSettingManager.CompressImages)
@@ -73,32 +95,6 @@ internal class TextureManager
         }
 	    return result;
     }
-
-    private static Dictionary<Texture2D, Dictionary<Texture2D, Sprite>> combineSpriteCache = new Dictionary<Texture2D, Dictionary<Texture2D, Sprite>>();
-
-    internal static Sprite CombineTextureCache(ref Texture2D baseTex, ref Texture2D topTex)
-    {
-        try
-        {
-            if (combineSpriteCache.ContainsKey(baseTex))
-            {
-                if (combineSpriteCache[baseTex].ContainsKey(topTex))
-                {
-                    return combineSpriteCache[baseTex][topTex];
-                }
-            }
-        }
-        catch
-        {
-            // Keep goin
-        }
-
-        Sprite sprite = CombineTextures(baseTex, topTex);
-        combineSpriteCache[baseTex] = new Dictionary<Texture2D, Sprite>();
-        combineSpriteCache[baseTex][topTex] = sprite;
-        return sprite;
-    }
-
     internal static Sprite CombineTextures(Texture2D baseTex, Texture2D topTex)
     {
         Resources.UnloadUnusedAssets();

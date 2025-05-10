@@ -99,10 +99,11 @@ public static class DiagonalTaxiwaysPatch
 		newConnectionsArray[4], newConnectionsArray[5], newConnectionsArray[6], newConnectionsArray[7],
 		newConnectionsArray[8], newConnectionsArray[9], newConnectionsArray[10], newConnectionsArray[11]) switch
 		{
+			(5, _, _, false, _, false, _, _, false, false, _, _, false) => TextureRegistry.ApplyEndCap,
 			(7, _, _, false, _, _, _, _, _, true, true, true, true) => TextureRegistry.ApplyTaxiwayEdgeTurnEdge,
 			(7, _, _, _, _, false, _, _, _, true, _, _, true) => TextureRegistry.ApplyTaxiwayEdgeStraightEdge,
 			(7, _, _, false, _, _, _, _, _, true, _, _, _) => TextureRegistry.ApplyHorizontalCurveInto,
-			(5, _, _, _, true, true, true, true, true, _, _, false, _ ) => TextureRegistry.ApplyVerticalCurveOut,
+			(5, _, _, _, true, true, true, true, true, _, true, false, _ ) => TextureRegistry.ApplyVerticalCurveOut,
 			(5, true, true, _, true, _, true, true, _, false, _, _, _ ) => TextureRegistry.ApplyHorizontalCurveOut,
 			(5, true, true, _, true, _, true, true, _, true, _, _, true) => TextureRegistry.ApplyTaxiwayEdgeStraightEdge,
 			(6, true, true, _, true, _, true, true, _, true, _, _, true) => TextureRegistry.ApplyTaxiwayEdgeStraightEdge,

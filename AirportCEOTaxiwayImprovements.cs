@@ -1,4 +1,5 @@
-﻿using AirportCEOTaxiwayImprovements._45DegreeTaxiways;
+﻿using AirportCEOModLoader.SaveLoadUtils;
+using AirportCEOTaxiwayImprovements._45DegreeTaxiways;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -27,10 +28,15 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
         ConfigReference = Config;
 
         // Config
-        //Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} is setting up config.");
-        //AirportCEOCustomBuildablesConfig.SetUpConfig();
-        //Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} finished setting up config.");
+        Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} is setting up config.");
+        AirportCEOTaxiwayImprovementConfig.SetUpConfig();
+        Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} finished setting up config.");
+    }
 
-        TextureManager.LoadTextures();
+    private void Start()
+    {
+        AirportCEOModLoader.WorkshopUtils.WorkshopUtils.Register("TaxiwaySprites", TextureManager.LoadTextures);
+        AirportCEOModLoader.WatermarkUtils.WatermarkUtils.Register(new AirportCEOModLoader.WatermarkUtils.WatermarkInfo("TI", "1.0", true));
+        EventDispatcher.LoadStarted += AdditionalPrefabChanges.DoModifications;
     }
 }

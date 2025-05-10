@@ -29,4 +29,8 @@
       <HintPath>lib\Assembly-CSharp-publicized.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Airport CEO\BepInEx\plugins"/>
+  </Target>
 </Project>
