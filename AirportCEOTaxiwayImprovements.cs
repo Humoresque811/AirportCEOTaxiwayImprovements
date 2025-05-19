@@ -1,4 +1,5 @@
-﻿using AirportCEOModLoader.SaveLoadUtils;
+﻿using AirportCEOModLoader;
+using AirportCEOModLoader.SaveLoadUtils;
 using AirportCEOTaxiwayImprovements._45DegreeTaxiways;
 using BepInEx;
 using BepInEx.Configuration;
@@ -37,6 +38,12 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
     {
         AirportCEOModLoader.WorkshopUtils.WorkshopUtils.Register("TaxiwaySprites", TextureManager.LoadTextures);
         AirportCEOModLoader.WatermarkUtils.WatermarkUtils.Register(new AirportCEOModLoader.WatermarkUtils.WatermarkInfo("TI", "1.0", true));
-        EventDispatcher.LoadStarted += AdditionalPrefabChanges.DoModifications;
+        EventDispatcher.NewGameStarted += AdditionalPrefabChanges.DoModifications;
+
+
+        if (AirportCEOTaxiwayImprovementConfig.AutomaticallyTurnModOn.Value)
+        {
+            ModManager.ActivateMod("84c9750c-1ce6-4d02-85d0-a17bd79501e0"); // We just quietly activate ourselves so that the textures load
+        }
     }
 }

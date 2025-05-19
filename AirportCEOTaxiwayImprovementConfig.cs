@@ -11,6 +11,7 @@ internal static class AirportCEOTaxiwayImprovementConfig
 {
     internal static ConfigEntry<bool> SmoothDiagonals { get; private set; }
     internal static ConfigEntry<string> AlternateLoadingPath { get; private set; }
+    internal static ConfigEntry<bool> AutomaticallyTurnModOn { get; private set; }
 
     internal static void SetUpConfig()
     {
@@ -19,5 +20,7 @@ internal static class AirportCEOTaxiwayImprovementConfig
         AlternateLoadingPath = AirportCEOTaxiwayImprovements.ConfigReference.Bind("General", "Alternate Texture Loading Path", "", "LEAVE BLANK unless you know what you are doing. " +
             "Directory to load textures from instead of using the mod. Useful for development or non-steam users. Note: There is not much error handling in the loading code, this " +
             "may cause larger bugs if not all textures are found in the directory.");
+        AutomaticallyTurnModOn = AirportCEOTaxiwayImprovements.ConfigReference.Bind("General", "Automatically Turn Mod On", true, "Automatically turn on (enable) the ACEO mod portion" +
+            " of the mod loader so it works properly. You should not have to touch this setting.");
     }
 }

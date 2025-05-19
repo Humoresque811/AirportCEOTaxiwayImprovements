@@ -21,7 +21,7 @@ internal class AdditionalPrefabChanges
             BuildingController.Instance.aircraftStructuresPrefabs.largeStand = largeStand.gameObject;
 
             Transform largeStandTBN = largeStand.GetChild(9);
-                
+
             var newTile11 = GameObject.Instantiate(largeStandTBN.GetChild(0), largeStandTBN);
             newTile11.Translate(new Vector3(0, -4));
             newTile11.SetAsLastSibling();
@@ -128,15 +128,22 @@ internal class AdditionalPrefabChanges
 
             runwayEntranceLargeFastR.GetChild(7).Translate(new Vector3(-4, 0));
 
-            // Sprite modifications this time!
-            DataPlaceholderStructures.Instance.runwayFastExitAsphalt = TextureRegistry.AsphaltEntranceFast;
-            DataPlaceholderStructures.Instance.runwayFastExitAsphaltLarge = TextureRegistry.AsphaltEntranceFastLarge;
-            DataPlaceholderStructures.Instance.runwayFastExitConcrete = TextureRegistry.ConcreteEntranceFast;
-            DataPlaceholderStructures.Instance.runwayFastExitConcreteLarge = TextureRegistry.ConcreteEntranceFastLarge;
+            UpdateSprites(_);
+
+            AirportCEOTaxiwayImprovements.TILogger.LogMessage($"Prefab changes have been make successfully!");
         }
         catch (Exception ex)
         {
             AirportCEOTaxiwayImprovements.TILogger.LogError($"Failed to do modifications to runway/stand prefabs. {ExceptionUtils.ProccessException(ex)}"); 
         }
+    }
+
+    internal static void UpdateSprites(SaveLoadGameDataController _)
+    {
+        // Sprite modifications this time!
+        DataPlaceholderStructures.Instance.runwayFastExitAsphalt = TextureRegistry.AsphaltEntranceFast;
+        DataPlaceholderStructures.Instance.runwayFastExitAsphaltLarge = TextureRegistry.AsphaltEntranceFastLarge;
+        DataPlaceholderStructures.Instance.runwayFastExitConcrete = TextureRegistry.ConcreteEntranceFast;
+        DataPlaceholderStructures.Instance.runwayFastExitConcreteLarge = TextureRegistry.ConcreteEntranceFastLarge;
     }
 }

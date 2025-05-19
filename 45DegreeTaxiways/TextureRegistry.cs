@@ -99,9 +99,9 @@ internal static class TextureRegistry
             associatedTiles[node].quality = foundationType == Enums.FoundationType.Concrete ? (byte)5 : (byte)4;
             node.foundationType = foundationType;
         }
-        catch (Exception ex)
+        catch
         {
-            AirportCEOTaxiwayImprovements.TILogger.LogError($"Error while running smoothing code!. {ExceptionUtils.ProccessException(ex)}");
+            // This isn't really a bad issue so we won't log it for the sake of keeping logs clean
         }
     }
     internal static void ApplyFullDia(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
@@ -170,9 +170,9 @@ internal static class TextureRegistry
         {
             associatedTiles[node].quality = (byte)foundationType;
         }
-        catch (Exception ex)
+        catch
         {
-            AirportCEOTaxiwayImprovements.TILogger.LogError($"Unable to set part. {ex.Message}");
+            // This isn't really a bad issue so we won't log it for the sake of keeping logs clean
         }
 
         return obj;
