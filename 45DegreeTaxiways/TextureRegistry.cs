@@ -39,28 +39,44 @@ internal static class TextureRegistry
     internal static Sprite AsphaltEndCap;
     internal static Sprite ConcreteEndCap;
 
+
+    // Taxiway Nodes
+
+    internal static Sprite Straight_45;
+    internal static Sprite Straight_90;
+
+    internal static Sprite Curve_4590_P3;
+    internal static Sprite Curve_4590_P4;
+    internal static Sprite CurveStraight_4590_P4;
+    internal static Sprite Curve_4590_P5;
+    internal static Sprite CurveStraight_4590_P5;
+
+    internal static Sprite X_4590;
+    internal static Sprite X_4590_Curves;
+
+
     internal static void Init()
     {
-        ConcreteVerticalCurveInto = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.VerticalCurveInto);
-        ConcreteHorizontalCurveInto = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.HorizontalCurveInto);
+        ConcreteVerticalCurveInto = TextureManager.CombineTexturesNew(TextureManager.ConcreteFull, TextureManager.VerticalCurveInto);
+        ConcreteHorizontalCurveInto = TextureManager.CombineTexturesNew(TextureManager.ConcreteFull, TextureManager.HorizontalCurveInto);
 
-        ConcreteVerticalCurveOutOf = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.VerticalCurveOutOf);
-        ConcreteHorizontalCurveOutOf = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.HorizontalCurveOutOf);
+        ConcreteVerticalCurveOutOf = TextureManager.CombineTexturesNew(TextureManager.ConcreteFull, TextureManager.VerticalCurveOutOf);
+        ConcreteHorizontalCurveOutOf = TextureManager.CombineTexturesNew(TextureManager.ConcreteFull, TextureManager.HorizontalCurveOutOf);
 
-        ConcreteDiagonalHalf = TextureManager.CombineTextures(TextureManager.ConcreteTri, TextureManager.DiagonalHalf);
-        ConcreteDiagonalFull = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.DiagonalFull);
+        ConcreteDiagonalHalf = TextureManager.CombineTexturesNew(TextureManager.ConcreteTri, TextureManager.DiagonalHalf);
+        ConcreteDiagonalFull = TextureManager.CombineTexturesNew(TextureManager.ConcreteFull, TextureManager.DiagonalFull);
 
-        AsphaltVerticalCurveInto = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.VerticalCurveInto);
-        AsphaltHorizontalCurveInto = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.HorizontalCurveInto);
+        AsphaltVerticalCurveInto = TextureManager.CombineTexturesNew(TextureManager.AsphaltFull, TextureManager.VerticalCurveInto);
+        AsphaltHorizontalCurveInto = TextureManager.CombineTexturesNew(TextureManager.AsphaltFull, TextureManager.HorizontalCurveInto);
 
-        AsphaltVerticalCurveOutOf = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.VerticalCurveOutOf);
-        AsphaltHorizontalCurveOutOf = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.HorizontalCurveOutOf);
+        AsphaltVerticalCurveOutOf = TextureManager.CombineTexturesNew(TextureManager.AsphaltFull, TextureManager.VerticalCurveOutOf);
+        AsphaltHorizontalCurveOutOf = TextureManager.CombineTexturesNew(TextureManager.AsphaltFull, TextureManager.HorizontalCurveOutOf);
 
-        AsphaltDiagonalHalf = TextureManager.CombineTextures(TextureManager.AsphaltTri, TextureManager.DiagonalHalf);
-        AsphaltDiagonalFull = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.DiagonalFull);
+        AsphaltDiagonalHalf = TextureManager.CombineTexturesNew(TextureManager.AsphaltTri, TextureManager.DiagonalHalf);
+        AsphaltDiagonalFull = TextureManager.CombineTexturesNew(TextureManager.AsphaltFull, TextureManager.DiagonalFull);
 
-        AsphaltEndCap = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.EndCap);
-        ConcreteEndCap = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.EndCap);
+        AsphaltEndCap = TextureManager.CombineTexturesNew(TextureManager.AsphaltFull, TextureManager.EndCap);
+        ConcreteEndCap = TextureManager.CombineTexturesNew(TextureManager.ConcreteFull, TextureManager.EndCap);
 
 
         TextureManager.AsphaltEntranceFast.wrapMode = TextureWrapMode.Clamp;
@@ -76,6 +92,7 @@ internal static class TextureRegistry
         TextureManager.ConcreteEntranceFastLarge.wrapMode = TextureWrapMode.Clamp;
         ConcreteEntranceFastLarge = Sprite.Create(TextureManager.ConcreteEntranceFastLarge, new Rect(0, 0, TextureManager.ConcreteEntranceFastLarge.width, TextureManager.ConcreteEntranceFastLarge.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
 
+        TaxiwayNodeImageServer.SetSpecials();
     }
 
     internal static void ApplySmallTri(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)
@@ -165,6 +182,7 @@ internal static class TextureRegistry
         Transform obj = GameObject.Instantiate(SingletonNonDestroy<DataPlaceholderStructures>.Instance.GetTaxiwayEdge(Enums.FoundationType.Asphalt, Enums.TaxiwayBuilderType.StraightEdge), node.transform).transform;
         obj.eulerAngles = new Vector3(0f, 0f, rotation);
         obj.localPosition = new Vector3(0f, 0f, 0.001f);
+        obj.localScale = new Vector3(scaleAdjustment, scaleAdjustment, obj.localScale.z);
 
         try
         {
@@ -201,4 +219,5 @@ internal static class TextureRegistry
 
 
 	private static readonly DataPlaceholderStructures DPS = SingletonNonDestroy<DataPlaceholderStructures>.Instance;
+    private static readonly int scaleAdjustment = DownCompressor.GetDownscaleInt();
 }

@@ -82,7 +82,7 @@ internal class AdditionalPrefabChanges
             BuildingController.Instance.runwayEntrancesPrefabs.runwayFastEntrance = runwayEntranceFast.gameObject;
 
             Transform runwayEntranceFastSprite = runwayEntranceFast.GetChild(0).GetChild(0);
-            runwayEntranceFastSprite.localScale = new Vector3(4f, 4f, 1);
+            runwayEntranceFastSprite.localScale = new Vector3(4f * scaleAdjustment, 4f * scaleAdjustment, 1);
 
             runwayEntranceFast.GetChild(6).GetChild(0).GetChild(6).gameObject.SetActive(false);
 
@@ -95,7 +95,7 @@ internal class AdditionalPrefabChanges
             BuildingController.Instance.runwayEntrancesPrefabs.runwayFastEntranceReversed = runwayEntranceFastR.gameObject;
 
             Transform runwayEntranceFastRSprite = runwayEntranceFastR.GetChild(0).GetChild(0);
-            runwayEntranceFastRSprite.localScale = new Vector3(4f, 4f, 1);
+            runwayEntranceFastRSprite.localScale = new Vector3(4f * scaleAdjustment , 4f * scaleAdjustment, 1);
 
             runwayEntranceFastR.GetChild(6).GetChild(0).GetChild(6).gameObject.SetActive(false);
 
@@ -109,7 +109,7 @@ internal class AdditionalPrefabChanges
 
             Transform runwayEntranceFastLargeSprite = runwayEntranceLargeFast.GetChild(0).GetChild(0);
             runwayEntranceFastLargeSprite.localPosition = Vector3.zero;
-            runwayEntranceFastLargeSprite.localScale = new Vector3(4f, 4f, 1);
+            runwayEntranceFastLargeSprite.localScale = new Vector3(4f * scaleAdjustment, 4f * scaleAdjustment, 1);
 
             runwayEntranceLargeFast.GetChild(6).GetChild(0).GetChild(6).gameObject.SetActive(false);
 
@@ -122,7 +122,7 @@ internal class AdditionalPrefabChanges
 
             Transform runwayEntranceFastLargeRSprite = runwayEntranceLargeFastR.GetChild(0).GetChild(0);
             runwayEntranceFastLargeRSprite.localPosition = Vector3.zero;
-            runwayEntranceFastLargeRSprite.localScale = new Vector3(4f, 4f, 1);
+            runwayEntranceFastLargeRSprite.localScale = new Vector3(4f * scaleAdjustment, 4f * scaleAdjustment, 1);
 
             runwayEntranceLargeFastR.GetChild(6).GetChild(0).GetChild(6).gameObject.SetActive(false);
 
@@ -146,4 +146,6 @@ internal class AdditionalPrefabChanges
         DataPlaceholderStructures.Instance.runwayFastExitConcrete = TextureRegistry.ConcreteEntranceFast;
         DataPlaceholderStructures.Instance.runwayFastExitConcreteLarge = TextureRegistry.ConcreteEntranceFastLarge;
     }
+
+    private static readonly int scaleAdjustment = DownCompressor.GetDownscaleInt();
 }

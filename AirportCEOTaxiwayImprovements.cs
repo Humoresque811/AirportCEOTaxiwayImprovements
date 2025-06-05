@@ -36,9 +36,9 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
 
     private void Start()
     {
-        AirportCEOModLoader.WorkshopUtils.WorkshopUtils.Register("TaxiwaySprites", TextureManager.LoadTextures);
-        AirportCEOModLoader.WatermarkUtils.WatermarkUtils.Register(new AirportCEOModLoader.WatermarkUtils.WatermarkInfo("TI", "1.0", true));
-        EventDispatcher.NewGameStarted += AdditionalPrefabChanges.DoModifications;
+        AirportCEOModLoader.WorkshopUtils.WorkshopUtils.Register("TaxiwaySprites", TextureManager.SaveTexturePath);
+        AirportCEOModLoader.WatermarkUtils.WatermarkUtils.Register(new AirportCEOModLoader.WatermarkUtils.WatermarkInfo("TI", "1.1", true));
+        EventDispatcher.NewGameStarted += TextureManager.DoAllChanges;
 
 
         if (AirportCEOTaxiwayImprovementConfig.AutomaticallyTurnModOn.Value)

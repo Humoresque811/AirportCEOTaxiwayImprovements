@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static Enums;
 
 namespace AirportCEOTaxiwayImprovements._45DegreeTaxiways;
 
