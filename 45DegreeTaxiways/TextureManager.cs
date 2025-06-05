@@ -45,11 +45,16 @@ internal static class TextureManager
     internal static Texture2D Straight_45;
     internal static Texture2D Straight_90;
 
+    internal static Texture2D Curve_9090_P1;
+    internal static Texture2D Curve_9090_P2;
+
     internal static Texture2D Curve_4590_P1;
     internal static Texture2D Curve_4590_P2;
     internal static Texture2D Curve_4590_P3;
     internal static Texture2D Curve_4590_P4;
     internal static Texture2D Curve_4590_P5;
+
+    internal static Texture2D Clear;
 
     private static readonly Color TaxiwayNodeGold = new Color(0.906f, 0.718f, 0.247f, 1);
 
@@ -124,6 +129,17 @@ internal static class TextureManager
         Curve_4590_P3 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_4590_P3) + ".png")); 
         Curve_4590_P4 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_4590_P4) + ".png")); 
         Curve_4590_P5 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_4590_P5) + ".png")); 
+
+        Curve_9090_P1 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_9090_P1) + ".png")); 
+        Curve_9090_P2 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_9090_P2) + ".png"));
+
+        Clear = new Texture2D(640, 640);
+        Color[] veryClear = new Color[640 * 640];
+        for (int i = 0; i < veryClear.Length; i++)
+        {
+            veryClear[i] = Color.clear;
+        }
+        Clear.SetPixels(veryClear);
     }
 
     private static Texture2D LoadTexture(string filePath)

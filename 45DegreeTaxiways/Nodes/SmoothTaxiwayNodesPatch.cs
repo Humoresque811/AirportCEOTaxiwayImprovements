@@ -124,6 +124,17 @@ public static class SmoothTaxiwayNodesPatch
 		newConnections[45] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x + 12, node.transform.position.y + 4))	!= null;
 		newConnections[46] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x + 12, node.transform.position.y + 8))	!= null;
 		newConnections[47] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x + 12, node.transform.position.y + 12))	!= null;
+
+		// Outermost ones (sparse)
+
+		newConnections[48] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x - 16, node.transform.position.y - 12))	!= null;
+		newConnections[49] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x - 16, node.transform.position.y + 12))	!= null;
+		newConnections[51] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x - 12, node.transform.position.y - 16))	!= null;
+		newConnections[50] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x - 12, node.transform.position.y + 16))	!= null;
+		newConnections[52] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x + 12, node.transform.position.y - 16))	!= null;
+		newConnections[53] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x + 12, node.transform.position.y + 16))	!= null;
+		newConnections[54] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x + 16, node.transform.position.y - 12))	!= null;
+		newConnections[55] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x + 16, node.transform.position.y + 12))	!= null;
 	}
 
 	private static DataPlaceholderStructures DPS = SingletonNonDestroy<DataPlaceholderStructures>.Instance;

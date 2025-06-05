@@ -14,7 +14,7 @@ internal static class TaxiwayNodeImageServer
 	private static readonly Dictionary<NodeConfiguration, Sprite> cachedSprites = new();
 	private static readonly List<Sprite> notSpecials = new();
 
-	internal static readonly int connectionArrayLength = 48;
+	internal static readonly int connectionArrayLength = 56;
 
     internal static Sprite GetPotentialSprite(bool[] newConnectionsArray, out int rotation, out bool isSpecial)
 	{
@@ -121,53 +121,68 @@ internal static class TaxiwayNodeImageServer
 		newConnectionsArray[28], newConnectionsArray[29], newConnectionsArray[30], newConnectionsArray[31], newConnectionsArray[32],
 		newConnectionsArray[33], newConnectionsArray[34], newConnectionsArray[35], newConnectionsArray[36], newConnectionsArray[37],
 		newConnectionsArray[38], newConnectionsArray[39], newConnectionsArray[40], newConnectionsArray[41], newConnectionsArray[42],
-		newConnectionsArray[43], newConnectionsArray[44], newConnectionsArray[45], newConnectionsArray[46], newConnectionsArray[47]);
+		newConnectionsArray[43], newConnectionsArray[44], newConnectionsArray[45], newConnectionsArray[46], newConnectionsArray[47],
+		newConnectionsArray[48], newConnectionsArray[49], newConnectionsArray[50], newConnectionsArray[51], newConnectionsArray[52],
+		newConnectionsArray[53], newConnectionsArray[54], newConnectionsArray[55]);
 
 		bool matched = false;
 		ouputTex = new List<Texture2D>();
 
 		switch (infoSet) {
-			case (_, true, _, true, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _):
+			case (_, true, _, true, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _):
 				ouputTex.Add(TextureManager.Straight_90);
                 matched = true;
 				break;
 		}
 		switch (infoSet) {
-			case (_, _, _, _, true, _, true, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true):
+			case (_, _, _, _, true, _, true, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _):
 				ouputTex.Add(TextureManager.Straight_45);
                 matched = true;
 				break;
 		}
 		switch (infoSet) {
-			case (_, true, _, true, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, true, _, false, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, false, _):
+			case (_, true, _, true, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, true):
 				ouputTex.Add(TextureManager.Curve_4590_P1);
                 matched = true;
 				break;
 		}
 		switch (infoSet) {
-			case (_, true, _, true, _, _, _, _, _, _, true, _, _, _, _, _, _, _, false, _, _, _, true, false, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _):
+			case (_, _, _, true, true, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _):
 				ouputTex.Add(TextureManager.Curve_4590_P2);
                 matched = true;
 				break;
 		}
 		switch (infoSet) {
-			case (_, _, _, true, true, _, _, _, _, _, true, _, _, _, _, _, false, _, false, _, _, _, _, true, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true):
+			case (_, _, _, _, true, _, true, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _):
 				ouputTex.Add(TextureManager.Curve_4590_P3);
                 matched = true;
 				break;
 		}	
 		switch (infoSet) {
-			case (false, _, _, _, true, _, true, false, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true):
-				ouputTex.Add(TextureManager.Curve_4590_P4);
+			case (true, true, _, true, true, _, _, _, _, _, true, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _):
+				ouputTex.Add(TextureManager.Curve_9090_P1);
                 matched = true;
 				break;
-		}
+		}	
 		switch (infoSet) {
-			case (_, _, _, false, true, _, true, _, true, _, false, _, _, _, _, _, _, _, _, _, _, _, _, true, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true): // hits when flipped and i=1
-				ouputTex.Add(TextureManager.Curve_4590_P5);
+			case (_, true, true, _, true, true, true, _, _, true, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _):
+				ouputTex.Add(TextureManager.Clear);
                 matched = true;
 				break;
-		}
+		}	
+
+		//switch (infoSet) {
+		//	case (false, _, _, _, true, _, true, false, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true):
+		//		ouputTex.Add(TextureManager.Curve_4590_P4);
+  //              matched = true;
+		//		break;
+		//}
+		//switch (infoSet) {
+		//	case (_, _, _, false, true, _, true, _, true, _, false, _, _, _, _, _, _, _, _, _, _, _, _, true, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true): // hits when flipped and i=1
+		//		ouputTex.Add(TextureManager.Curve_4590_P5);
+  //              matched = true;
+		//		break;
+		//}
 
 		return matched;
     }
@@ -225,6 +240,15 @@ internal static class TaxiwayNodeImageServer
 		output[39] =	newConnectionsArray[46];
 		output[41] =	newConnectionsArray[47];
 		
+		output[51] =	newConnectionsArray[48];
+		output[53] =	newConnectionsArray[49];
+		output[49] =	newConnectionsArray[50];
+		output[55] =	newConnectionsArray[51];
+		output[48] =	newConnectionsArray[52];
+		output[54] =	newConnectionsArray[53];
+		output[50] =	newConnectionsArray[54];
+		output[52] =	newConnectionsArray[55];
+
 		for (int i = 0; i < output.Length; i++)
 		{
 			newConnectionsArray[i] = output[i];
@@ -285,6 +309,15 @@ internal static class TaxiwayNodeImageServer
 		output[28] =	newConnectionsArray[45];
 		output[29] =	newConnectionsArray[46];
 		output[30] =	newConnectionsArray[47];
+
+		output[54] =	newConnectionsArray[48];
+		output[55] =	newConnectionsArray[49];
+		output[52] =	newConnectionsArray[50];
+		output[53] =	newConnectionsArray[51];
+		output[50] =	newConnectionsArray[52];
+		output[51] =	newConnectionsArray[53];
+		output[48] =	newConnectionsArray[54];
+		output[49] =	newConnectionsArray[55];
 
         for (int i = 0; i < output.Length; i++)
 		{
