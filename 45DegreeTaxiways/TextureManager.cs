@@ -56,6 +56,9 @@ internal static class TextureManager
 
     internal static Texture2D Clear;
 
+    internal static Texture2D Node_Light_90;
+    internal static Texture2D Node_Light_45;
+
     private static readonly Color TaxiwayNodeGold = new Color(0.906f, 0.718f, 0.247f, 1);
 
     private static string directoryPathSaved;
@@ -133,6 +136,9 @@ internal static class TextureManager
         Curve_9090_P1 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_9090_P1) + ".png")); 
         Curve_9090_P2 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_9090_P2) + ".png"));
 
+        Node_Light_45 = LoadTexture(Path.Combine(directoryPath, nameof(Node_Light_45) + ".png")); 
+        Node_Light_90 = LoadTexture(Path.Combine(directoryPath, nameof(Node_Light_90) + ".png"));
+
         Clear = new Texture2D(640, 640);
         Color[] veryClear = new Color[640 * 640];
         for (int i = 0; i < veryClear.Length; i++)
@@ -148,13 +154,14 @@ internal static class TextureManager
 	    if (File.Exists(filePath))
 	    {
 		    byte[] data = File.ReadAllBytes(filePath);
-		    Texture2D texture2D = new Texture2D(2, 2, TextureFormat.ARGB32, true)
+		    Texture2D texture2D = new Texture2D(512, 512, TextureFormat.ARGB32, true)
 		    {
 			    filterMode = FilterMode.Bilinear,
                 wrapMode = TextureWrapMode.Clamp,
                 loadAllMips = true,
 		    };
 		    texture2D.LoadImage(data);
+            texture2D.Apply(true);
             texture2D = DownCompressor.DownscaleTextureFastGPU(texture2D);
 		    if (GameSettingManager.CompressImages)
 		    {
@@ -187,6 +194,40 @@ internal static class TextureManager
             return null;
         }
 
+        SimpleTexture outputTexture = CombineTexturesInternal(textures);
+
+        return outputTexture.ToSprite();
+    }
+
+    internal static Sprite CombineTexturesWithNodeLight(SimpleTexture light, SimpleTexture[] textures)
+    {
+        foreach (SimpleTexture simpleTexture in textures)
+        {
+            if (simpleTexture.width == textures[0].width && simpleTexture.height == textures[0].height && simpleTexture.texture.Length == textures[0].texture.Length)
+            {
+                continue;
+            }
+
+            AirportCEOTaxiwayImprovements.TILogger.LogError($"Textures not the same size in {nameof(CombineTexturesNew)}. Either I messed up or someone is messing with my textures!");
+            return null;
+        }
+
+        SimpleTexture outputTexture = CombineTexturesInternal(textures);
+
+        for (int i = 0; i < light.texture.Length; i++)
+        {
+            if (light.texture[i].a == 1)
+            {
+                outputTexture.texture[i] = light.texture[i];
+                continue;
+            }
+        }
+
+        return outputTexture.ToSprite();
+    }
+
+    private static SimpleTexture CombineTexturesInternal(SimpleTexture[] textures)
+    {
         SimpleTexture outputTexture = new SimpleTexture(textures[0].width, textures[0].height);
 
 
@@ -209,7 +250,7 @@ internal static class TextureManager
             }
         }
 
-        return outputTexture.ToSprite();
+        return outputTexture;
     }
 
     internal static Sprite CreateSingleTexture(Texture2D baseTex)

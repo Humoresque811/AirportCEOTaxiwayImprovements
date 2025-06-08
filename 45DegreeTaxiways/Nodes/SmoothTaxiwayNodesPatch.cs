@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AirportCEOModLoader;
 using AirportCEOModLoader.Core;
 using HarmonyLib;
 using UnityEngine;
@@ -35,18 +36,18 @@ public static class SmoothTaxiwayNodesPatch
 
 			__instance.GetConnectors();
 
-			bool[] newConnectorsArray = new bool[TaxiwayNodeImageServer.connectionArrayLength];
-			ImportBasicConnections(ref newConnectorsArray, ref __instance.connectors);
-			FindNewConnections(ref newConnectorsArray, __instance);
+			//bool[] newConnectorsArray = new bool[TaxiwayNodeImageServer.connectionArrayLength];
+			//ImportBasicConnections(ref newConnectorsArray, ref __instance.connectors);
+			//FindNewConnections(ref newConnectorsArray, __instance);
 
-			Sprite spriteToSetTo = TaxiwayNodeImageServer.GetPotentialSprite(newConnectorsArray, out int rotation, out bool isSpecial);
+			Sprite spriteToSetTo = TaxiwayNodeImageServer.GetPotentialSprite(__instance.transform.position, out int rotation);
 
 			if (spriteToSetTo != null)
 			{
 				__instance.spriteRender.sprite = spriteToSetTo;
 				__instance.spriteRender.transform.eulerAngles = new Vector3(0, 0, rotation);
 				__instance.spriteRender.transform.localScale = new Vector3(NEWSCALEFORSPRITES, NEWSCALEFORSPRITES, __instance.spriteRender.transform.localScale.z);
-				__instance.spriteRender.sortingOrder = isSpecial ? 100 : 80; // Above any non adjusted ones
+				__instance.spriteRender.sortingOrder = 80; // Above any non adjusted ones
 				return false;
 			}
 

@@ -2,6 +2,7 @@
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,32 +12,18 @@ namespace AirportCEOTaxiwayImprovements._45DegreeTaxiways;
 
 internal static class TaxiwayNodeImageServer
 {
-	private static readonly Dictionary<NodeConfiguration, Sprite> cachedSprites = new();
-	private static readonly List<Sprite> notSpecials = new();
+	private static readonly Dictionary<List<TextureConfiguration>, Sprite> cachedSprites = new();
 
 	internal static readonly int connectionArrayLength = 56;
 
-    internal static Sprite GetPotentialSprite(bool[] newConnectionsArray, out int rotation, out bool isSpecial)
+    internal static Sprite GetPotentialSprite(Vector2 nodePosition, out int rotation)
 	{
 		try
 		{
-			NodeConfiguration nodeConfiguration = new NodeConfiguration(newConnectionsArray);
-			if (AirportCEOTaxiwayImprovementConfig.UseTaxiwayNodeCache.Value)
-			{
-				for (int i = 0; i < 360; i += 90)
-				{
-					foreach (NodeConfiguration key in cachedSprites.Keys)
-					{
-						if (key.Equals(nodeConfiguration))
-						{
-							rotation = i;
-							isSpecial = notSpecials.Contains(cachedSprites[key]) ? false : true;
-							return cachedSprites[key];
-						}
-					}
-					nodeConfiguration = new NodeConfiguration(newConnectionsArray.RotateConnections());
-				}
-			}
+			Stopwatch stopper1 = new();
+			Stopwatch stopper2 = new();
+
+			stopper1.Start();
 
 			// We know this configuration does not exist anywhere!
 			List<TextureConfiguration> texturesApplicable = new();
@@ -46,147 +33,149 @@ internal static class TaxiwayNodeImageServer
 			bool flipHorizontally = false;
 			for (int i = 0; i < 4; i++)
 			{
-				if (GetMatchingTexture(newConnectionsArray, out List<Texture2D> outputTexes))
+				if (GetMatchingTexture(nodePosition, i, flipHorizontally, out List<Texture2D> outputTexes))
 				{
 					foreach (Texture2D tex in outputTexes)
 					{
 						texturesApplicable.Add(new TextureConfiguration(tex, i, flipHorizontally));
 					}
 				}
-				newConnectionsArray.RotateConnections();
 			}
 
 			flipHorizontally = true;
-			//newConnectionsArray.RotateConnections();    // Back to default
-			newConnectionsArray.FlipConnections();      // Flip them so we can catch all possible combinations
 
 			for (int i = 0; i < 4; i++)
 			{
-				if (GetMatchingTexture(newConnectionsArray, out List<Texture2D> outputTexes))
+				if (GetMatchingTexture(nodePosition, i, flipHorizontally, out List<Texture2D> outputTexes))
 				{
 					foreach (Texture2D tex in outputTexes)
 					{
 						texturesApplicable.Add(new TextureConfiguration(tex, i, flipHorizontally));
 					}
 				}
-				newConnectionsArray.RotateConnections();
 			}
-
-			//newConnectionsArray.RotateConnections();
-			newConnectionsArray.FlipConnections();
 
 			if (texturesApplicable.Count == 0)
 			{
 				// Nothing matches this layout at all
 				rotation = 0;
-				isSpecial = false;
 				return null;
 			}
 
+			if (AirportCEOTaxiwayImprovementConfig.UseTaxiwayNodeCache.Value)
+			{
+				foreach (List<TextureConfiguration> configurations in cachedSprites.Keys)
+				{
+					if (!IsListTextureContentEqual(texturesApplicable, configurations))
+					{
+						continue;
+					}
+
+					rotation = 0;
+					return cachedSprites[configurations];
+				}
+			}
+			stopper2.Start();
+			SimpleTexture? nodeLight = null;
+			bool allClear = true;
+
 			foreach (TextureConfiguration configTexture in texturesApplicable)
 			{
+				if (configTexture.textureReference == TextureManager.Straight_45)
+				{
+					TextureConfiguration nodeLightConfig = new TextureConfiguration(TextureManager.Node_Light_45, configTexture.rotationIndex, configTexture.flipHorizontally);
+					nodeLight = nodeLightConfig;
+				}
+				else if (configTexture.textureReference == TextureManager.Straight_90)
+				{
+					TextureConfiguration nodeLightConfig = new TextureConfiguration(TextureManager.Node_Light_90, configTexture.rotationIndex, configTexture.flipHorizontally);
+					nodeLight = nodeLightConfig;
+				}
+
+				if (configTexture.textureReference != TextureManager.Clear)
+				{
+					allClear = false;
+				}
+
 				adjustedTextures.Add(configTexture); //Implicit conversion behind the scenes here
 			}
 
-			Sprite newSprite = TextureManager.CombineTexturesNew(adjustedTextures.ToArray());
-			cachedSprites.Add(nodeConfiguration, newSprite);
+			SimpleTexture nodeLightConfirmed = nodeLight ?? TextureManager.Node_Light_90;
 
-			if (texturesApplicable.Count == 1 && (texturesApplicable[0].textureReference == TextureManager.Straight_90 
-				|| texturesApplicable[0].textureReference == TextureManager.Straight_45) && !notSpecials.Contains(newSprite))
+			Sprite newSprite = null;
+			if (allClear)
 			{
-				notSpecials.Add(newSprite);
+				newSprite = TextureManager.CombineTexturesNew(adjustedTextures.ToArray());
 			}
+			else
+			{
+				newSprite = TextureManager.CombineTexturesWithNodeLight(nodeLightConfirmed, adjustedTextures.ToArray());
+			}
+			cachedSprites.Add(texturesApplicable, newSprite);
+
+			stopper2.Stop();
+			stopper1.Stop();
+			AirportCEOTaxiwayImprovements.TILogger.LogInfo($"Time info: stopper 1 {stopper1.ElapsedMilliseconds}, and stopper 2 {stopper2.ElapsedMilliseconds}");
 
 			rotation = 0;
-			isSpecial = notSpecials.Contains(newSprite) ? false : true;
 			return newSprite;
 		}
 		catch (Exception ex)
 		{
 			AirportCEOTaxiwayImprovements.TILogger.LogError($"Taxiway Node Sprite generation code failed. {ExceptionUtils.ProccessException(ex)}");
 			rotation = 0;
-			isSpecial = false;
 			return null;
 		}
 	}
 
-	private static bool GetMatchingTexture(bool[] newConnectionsArray, out List<Texture2D> ouputTex)
+	private static bool GetMatchingTexture(Vector2 pos, int rot, bool flip, out List<Texture2D> ouputTex)
     {
-		var infoSet = (newConnectionsArray[0], newConnectionsArray[1], newConnectionsArray[2], newConnectionsArray[3],
-		newConnectionsArray[4], newConnectionsArray[5], newConnectionsArray[6], newConnectionsArray[7],
-		newConnectionsArray[8], newConnectionsArray[9], newConnectionsArray[10], newConnectionsArray[11], newConnectionsArray[12],
-		newConnectionsArray[13], newConnectionsArray[14], newConnectionsArray[15], newConnectionsArray[16], newConnectionsArray[17],
-		newConnectionsArray[18], newConnectionsArray[19], newConnectionsArray[20], newConnectionsArray[21], newConnectionsArray[22],
-		newConnectionsArray[23], newConnectionsArray[24], newConnectionsArray[25], newConnectionsArray[26], newConnectionsArray[27],
-		newConnectionsArray[28], newConnectionsArray[29], newConnectionsArray[30], newConnectionsArray[31], newConnectionsArray[32],
-		newConnectionsArray[33], newConnectionsArray[34], newConnectionsArray[35], newConnectionsArray[36], newConnectionsArray[37],
-		newConnectionsArray[38], newConnectionsArray[39], newConnectionsArray[40], newConnectionsArray[41], newConnectionsArray[42],
-		newConnectionsArray[43], newConnectionsArray[44], newConnectionsArray[45], newConnectionsArray[46], newConnectionsArray[47],
-		newConnectionsArray[48], newConnectionsArray[49], newConnectionsArray[50], newConnectionsArray[51], newConnectionsArray[52],
-		newConnectionsArray[53], newConnectionsArray[54], newConnectionsArray[55]);
-
 		bool matched = false;
 		ouputTex = new List<Texture2D>();
 
-		switch (infoSet) {
-			case (_, true, _, true, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _):
-				ouputTex.Add(TextureManager.Straight_90);
-                matched = true;
-				break;
+		if (IsMatchWith(pos, rot, flip, (-2, 0), (-1, 0), (1, 0), (2, 0)))
+		{
+			ouputTex.Add(TextureManager.Straight_90);
+            matched = true;
 		}
-		switch (infoSet) {
-			case (_, _, _, _, true, _, true, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _):
-				ouputTex.Add(TextureManager.Straight_45);
-                matched = true;
-				break;
-			case (_, _, _, _, true, _, true, _, true, _, _, _, _, true, _, _, _, _, _, _, _, _, _, true, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _):
-				ouputTex.Add(TextureManager.Straight_45);
-				matched = true;
-				break;
-		}
-		switch (infoSet) {
-			case (_, true, _, true, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, true):
-				ouputTex.Add(TextureManager.Curve_4590_P1);
-                matched = true;
-				break;
-		}
-		switch (infoSet) {
-			case (_, _, _, true, true, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _):
-				ouputTex.Add(TextureManager.Curve_4590_P2);
-                matched = true;
-				break;
-		}
-		switch (infoSet) {
-			case (_, _, _, _, true, _, true, _, _, true, false, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _):
-				ouputTex.Add(TextureManager.Curve_4590_P3);
-                matched = true;
-				break;
-		}	
-		switch (infoSet) {
-			case (true, true, _, true, true, _, _, _, _, _, true, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _):
-				ouputTex.Add(TextureManager.Curve_9090_P1);
-                matched = true;
-				break;
-		}	
-		switch (infoSet) {
-			case (_, true, true, _, true, true, true, _, _, true, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _):
-				ouputTex.Add(TextureManager.Clear);
-                matched = true;
-				break;
-		}	
 
-		//switch (infoSet) {
-		//	case (false, _, _, _, true, _, true, false, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true):
-		//		ouputTex.Add(TextureManager.Curve_4590_P4);
-  //              matched = true;
-		//		break;
-		//}
-		//switch (infoSet) {
-		//	case (_, _, _, false, true, _, true, _, true, _, false, _, _, _, _, _, _, _, _, _, _, _, _, true, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true): // hits when flipped and i=1
-		//		ouputTex.Add(TextureManager.Curve_4590_P5);
-  //              matched = true;
-		//		break;
-		//}
+		if (IsMatchWith(pos, rot, flip, (-3, -3), (-2, -2), (-1, -1), (1, 1), (2, 2), (3, 3)) ||
+			IsMatchWith(pos, rot, flip, (-3, -2), (-1, -2), (-2, -2), (-1, -1), (1, 1), (2, 2), (3, 3)))
+		{
+			ouputTex.Add(TextureManager.Straight_45);
+            matched = true;
+		}
+
+		if (IsMatchWith(pos, rot, flip, (-2, 0), (-1, 0), (1, 0), (2, 1), (3, 2), (4, 3)))
+		{
+			ouputTex.Add(TextureManager.Curve_4590_P1);
+            matched = true;
+		}
+
+		if ((IsMatchWith(pos, rot, flip, (-3, 0), (-2, 0), (-1, 0), (1, 1), (2, 2), (3, 3)) && IsNotMatchWith(pos, rot, flip, (1, 0), (0, 1), (2, 1), (1, 2), (3, 2), (2, 3))) ||
+			 IsMatchWith(pos, rot, flip, (-3, 0), (-2, 0), (-1, 0), (1, 1), (2, 2), (3, 3), (4, 4)))
+		{
+			ouputTex.Add(TextureManager.Curve_4590_P2);
+            matched = true;
+		}
+
+		if (IsMatchWith(pos, rot, flip, (-3, -1), (-2, -1), (-1, -1), (1, 1), (2, 2), (3, 3)))
+		{
+			ouputTex.Add(TextureManager.Curve_4590_P3);
+            matched = true;
+		}
+
+		if (IsMatchWith(pos, rot, flip, (-2, 0), (-1, 0), (1, 0), (1, 1), (1, 2), (1, 3), (0, 1)))
+		{
+			ouputTex.Add(TextureManager.Curve_9090_P1);
+            matched = true;
+		}
+		if (IsMatchWith(pos, rot, flip, (-2, -1), (-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (1, 2), (1, 3)) || 
+			IsMatchWith(pos, rot, flip, (-2, 0), (-1, 0), (-1, 1), (0, 1), (0, 2)))
+		{
+			ouputTex.Add(TextureManager.Clear);
+            matched = true;
+		}
 
 		return matched;
     }
@@ -333,7 +322,118 @@ internal static class TaxiwayNodeImageServer
 
 	internal static void SetSpecials()
 	{
-		//cachedSprites.Clear();
+
 	}
 
+	private static bool IsMatchWith(Vector2 nodePosition, int rotation, bool isFlipped, params (int, int)[] translationsToCheck)
+	{
+		Vector2[] newTranslations = UpdateTranslationsToInGameUnits(translationsToCheck, rotation, isFlipped);
+
+		foreach (Vector2 translation in newTranslations)
+		{
+			if (Singleton<TaxiwayController>.Instance.GetNodeAtPosition(nodePosition + translation) == null)
+			{
+				return false;
+			}
+		}
+
+		return true;
+    }
+	private static bool IsNotMatchWith(Vector2 nodePosition, int rotation, bool isFlipped, params (int, int)[] translationsToCheck)
+	{
+		Vector2[] newTranslations = UpdateTranslationsToInGameUnits(translationsToCheck, rotation, isFlipped);
+
+		foreach (Vector2 translation in newTranslations)
+		{
+			if (Singleton<TaxiwayController>.Instance.GetNodeAtPosition(nodePosition + translation) != null)
+			{
+				return false;
+			}
+		}
+
+		return true;
+    }
+
+	private static Vector2[] UpdateTranslationsToInGameUnits((int, int)[] translations, int rotation, bool isFlipped)
+	{
+		Vector2[] output = new Vector2[translations.Length];
+
+        for (int i = 0; i < translations.Length; i++)
+        {
+			output[i] = new Vector2(translations[i].Item1, translations[i].Item2);
+
+			output[i] *= 4;
+
+			if (isFlipped)
+			{
+				output[i] = new Vector2(-output[i].x, output[i].y);
+
+				if (rotation == 1)
+				{
+					output[i] = new Vector2(output[i].y, -output[i].x);
+				}
+				else if (rotation == 3)
+				{
+					output[i] = new Vector2(-output[i].y, output[i].x);
+				}
+			}
+			else
+			{
+				if (rotation == 3)
+				{
+					output[i] = new Vector2(output[i].y, -output[i].x);
+				}
+				else if (rotation == 1)
+				{
+					output[i] = new Vector2(-output[i].y, output[i].x);
+				}
+			}
+
+
+			if (rotation == 2)
+			{
+				output[i] = new Vector2(-output[i].x, -output[i].y);
+			}
+        }
+
+		return output;
+	}
+
+	private static bool IsListTextureContentEqual(List<TextureConfiguration> list1, List<TextureConfiguration> list2)
+	{
+		if (list1.Count != list2.Count)
+		{
+			return false;
+		}
+
+        for (int i = 0; i < list1.Count; i++)
+        {
+			if (!TextureConfigsEqual(list1[i], list2[i]))
+			{
+				return false;
+			}
+        }
+
+		return true;
+    }
+
+    private static bool TextureConfigsEqual(TextureConfiguration textureConfiguration1, TextureConfiguration textureConfiguration2)
+    {
+        if (textureConfiguration1.textureReference != textureConfiguration2.textureReference)
+        {
+            return false;
+        }
+
+        if (textureConfiguration1.rotationIndex != textureConfiguration2.rotationIndex)
+        {
+            return false;
+        }
+
+        if (textureConfiguration1.flipHorizontally != textureConfiguration2.flipHorizontally)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }

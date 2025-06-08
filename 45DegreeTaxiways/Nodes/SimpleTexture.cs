@@ -124,6 +124,7 @@ internal readonly struct TextureConfiguration
 		flipHorizontally = flip;
 	}
 
+
 	internal readonly Texture2D textureReference;
 	internal readonly int rotationIndex;
 	internal readonly bool flipHorizontally;
