@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using AirportCEOModLoader.Core;
 using HarmonyLib;
 using UnityEngine;
@@ -71,6 +72,9 @@ public static class SmoothTaxiwayNodesPatch
 
 	private static void FindNewConnections(ref bool[] newConnections, TaxiwayCenterBuilder node)
 	{
+		Stopwatch stopwatch = new();
+		stopwatch.Start();
+
 		newConnections[8] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x - 8, node.transform.position.y - 8))	!= null;
 		newConnections[9] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x - 8, node.transform.position.y - 4))	!= null;
 		newConnections[10] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x - 8, node.transform.position.y))		!= null;
@@ -135,6 +139,9 @@ public static class SmoothTaxiwayNodesPatch
 		newConnections[53] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x + 12, node.transform.position.y + 16))	!= null;
 		newConnections[54] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x + 16, node.transform.position.y - 12))	!= null;
 		newConnections[55] = Singleton<TaxiwayController>.Instance.GetNodeAtPosition(new Vector2(node.transform.position.x + 16, node.transform.position.y + 12))	!= null;
+
+		stopwatch.Stop();
+		AirportCEOTaxiwayImprovements.TILogger.LogInfo($"Time: {stopwatch.ElapsedMilliseconds}");
 	}
 
 	private static DataPlaceholderStructures DPS = SingletonNonDestroy<DataPlaceholderStructures>.Instance;

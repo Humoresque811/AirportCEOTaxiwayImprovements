@@ -135,9 +135,13 @@ internal static class TaxiwayNodeImageServer
 				break;
 		}
 		switch (infoSet) {
-			case (_, _, _, _, true, _, true, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _):
+			case (_, _, _, _, true, _, true, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _):
 				ouputTex.Add(TextureManager.Straight_45);
                 matched = true;
+				break;
+			case (_, _, _, _, true, _, true, _, true, _, _, _, _, true, _, _, _, _, _, _, _, _, _, true, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _):
+				ouputTex.Add(TextureManager.Straight_45);
+				matched = true;
 				break;
 		}
 		switch (infoSet) {
@@ -153,7 +157,7 @@ internal static class TaxiwayNodeImageServer
 				break;
 		}
 		switch (infoSet) {
-			case (_, _, _, _, true, _, true, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _):
+			case (_, _, _, _, true, _, true, _, _, true, false, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, true, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, true, _, _, _, _, _, _, _, _):
 				ouputTex.Add(TextureManager.Curve_4590_P3);
                 matched = true;
 				break;
