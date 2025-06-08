@@ -1,8 +1,10 @@
 ﻿using AirportCEOModLoader.Core;
 using HarmonyLib;
+using Nodes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -152,14 +154,15 @@ internal static class TaxiwayNodeImageServer
             matched = true;
 		}
 
-		if ((IsMatchWith(pos, rot, flip, (-3, 0), (-2, 0), (-1, 0), (1, 1), (2, 2), (3, 3)) && IsNotMatchWith(pos, rot, flip, (1, 0), (0, 1), (2, 1), (1, 2), (3, 2), (2, 3))) ||
+		if ((IsMatchWith(pos, rot, flip, (-3, 0), (-2, 0), (-1, 0), (1, 1), (2, 2), (3, 3)) && IsNotMatchWith(pos, rot, flip, (0, 1), (2, 1), (1, 2), (2, 3))) ||
 			 IsMatchWith(pos, rot, flip, (-3, 0), (-2, 0), (-1, 0), (1, 1), (2, 2), (3, 3), (4, 4)))
 		{
 			ouputTex.Add(TextureManager.Curve_4590_P2);
             matched = true;
 		}
 
-		if (IsMatchWith(pos, rot, flip, (-3, -1), (-2, -1), (-1, -1), (1, 1), (2, 2), (3, 3)))
+		if (IsMatchWith(pos, rot, flip, (-3, -1), (-2, -1), (-1, -1), (1, 1), (2, 2), (3, 3)) ||
+			IsMatchWith(pos, rot, flip, (-3, -1), (-2, -1), (-1, -1), (1, 1), (2, 2), (2, 3)))
 		{
 			ouputTex.Add(TextureManager.Curve_4590_P3);
             matched = true;
@@ -175,6 +178,12 @@ internal static class TaxiwayNodeImageServer
 		{
 			ouputTex.Add(TextureManager.Clear);
             matched = true;
+		}
+
+		if (IsMatchWith(pos, rot, flip, (-2, 0), (-1, 0), (1, 0), (2, 0), (0, -1), (0, -2)) && ouputTex.Count == 1 && ouputTex[0] == TextureManager.Straight_90)//If its a small T that we didnt replace
+		{
+			ouputTex.Clear();
+			matched = false;
 		}
 
 		return matched;
@@ -436,4 +445,15 @@ internal static class TaxiwayNodeImageServer
 
         return true;
     }
+
+	internal static void UpdateAllNodes(SaveLoadGameDataController _)
+	{
+		//foreach (Vector2 pos in TaxiwayController.Instance.taxiwayNodesByPosition.Keys)
+		//{
+		//	TaxiwayNodeModel model = GridManager.GetStructureByTypeFromPosition<TaxiwayNodeModel>(pos);
+		//	TaxiwayCenterBuilder builder = model.GetComponent<TaxiwayCenterBuilder>();
+		//	builder.UpdatePiece();
+		//}
+		 //																											Soon!!!
+	}
 }
