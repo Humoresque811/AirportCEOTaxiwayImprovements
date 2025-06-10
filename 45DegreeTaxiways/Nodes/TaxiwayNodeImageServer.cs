@@ -142,7 +142,7 @@ internal static class TaxiwayNodeImageServer
 		}
 
 		if (IsMatchWith(pos, rot, flip, (-3, -3), (-2, -2), (-1, -1), (1, 1), (2, 2), (3, 3)) ||
-			IsMatchWith(pos, rot, flip, (-3, -2), (-1, -2), (-2, -2), (-1, -1), (1, 1), (2, 2), (3, 3)))
+			IsMatchWith(pos, rot, flip, (-3, -2), (-1, -2), (-2, -2), (-1, -1), (1, 1), (2, 2)))
 		{
 			ouputTex.Add(TextureManager.Straight_45);
             matched = true;
@@ -161,7 +161,7 @@ internal static class TaxiwayNodeImageServer
             matched = true;
 		}
 
-		if (IsMatchWith(pos, rot, flip, (-3, -1), (-2, -1), (-1, -1), (1, 1), (2, 2), (3, 3)) ||
+		if (IsMatchWith(pos, rot, flip, (-4, -1), (-3, -1), (-2, -1), (-1, -1), (1, 1), (2, 2), (3, 3)) ||
 			IsMatchWith(pos, rot, flip, (-3, -1), (-2, -1), (-1, -1), (1, 1), (2, 2), (2, 3)))
 		{
 			ouputTex.Add(TextureManager.Curve_4590_P3);
@@ -448,12 +448,16 @@ internal static class TaxiwayNodeImageServer
 
 	internal static void UpdateAllNodes(SaveLoadGameDataController _)
 	{
-		//foreach (Vector2 pos in TaxiwayController.Instance.taxiwayNodesByPosition.Keys)
-		//{
-		//	TaxiwayNodeModel model = GridManager.GetStructureByTypeFromPosition<TaxiwayNodeModel>(pos);
-		//	TaxiwayCenterBuilder builder = model.GetComponent<TaxiwayCenterBuilder>();
-		//	builder.UpdatePiece();
-		//}
-		 //																											Soon!!!
+		PlaceableStructure[] structures = BuildingController.Instance.GetArrayOfSpecificStructureType(Enums.StructureType.TaxiwayNode);
+		
+
+		foreach (PlaceableStructure structure in structures)
+		{
+			if (structure is TaxiwayNodeModel)
+			{
+				TaxiwayCenterBuilder builder = structure.GetComponent<TaxiwayCenterBuilder>();
+				builder.UpdatePiece();
+			}
+		}
 	}
 }
