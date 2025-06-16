@@ -1,6 +1,7 @@
 ﻿using AirportCEOModLoader;
 using AirportCEOModLoader.SaveLoadUtils;
 using AirportCEOTaxiwayImprovements._45DegreeTaxiways;
+using AirportCEOTaxiwayImprovements.SaveLoad;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -42,10 +43,11 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
         EventDispatcher.EndOfLoad += UIEdits.ShowNodeWarningMessage;
         EventDispatcher.EndOfLoad += TaxiwayNodeImageServer.UpdateAllNodes;
 
-
         if (AirportCEOTaxiwayImprovementConfig.AutomaticallyTurnModOn.Value)
         {
             ModManager.ActivateMod("84c9750c-1ce6-4d02-85d0-a17bd79501e0"); // We just quietly activate ourselves so that the textures load
         }
+
+        SaveLoadHandler.SetUpSaveLoadHandling();
     }
 }

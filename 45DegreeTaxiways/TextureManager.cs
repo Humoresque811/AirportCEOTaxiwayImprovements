@@ -61,6 +61,9 @@ internal static class TextureManager
 
     private static readonly Color TaxiwayNodeGold = new Color(0.906f, 0.718f, 0.247f, 1);
 
+    // Other
+    internal static Texture2D planeCrossing;
+
     private static string directoryPathSaved;
     internal static void SaveTexturePath(string directoryPath)
     {
@@ -115,11 +118,21 @@ internal static class TextureManager
         {
             LoadTaxiwayNodeTextures(directoryPath);
         }
+        if (AirportCEOTaxiwayImprovementConfig.ImproveRoadMarkings.Value)
+        {
+            LoadRoadMarkingTextures(directoryPath);
+        }
 
         TextureRegistry.Init();
         stopwatch.Stop();
         AirportCEOTaxiwayImprovements.TILogger.LogMessage($"Completed texture loading successfully, which took {stopwatch.ElapsedMilliseconds}ms. " +
             $"Downscale setting: {AirportCEOTaxiwayImprovementConfig.DownscaleLevel.Value}");
+    }
+
+    private static void LoadRoadMarkingTextures(string directoryPath)
+    {
+        directoryPath = "C:\\My Stuff\\ACEO Texture Work\\Airport CEO Textures\\Rebuilt 45 Degree Mod\\AirporCEOTaxiwayImprovements\\roadIcons";
+        planeCrossing = LoadTexture(Path.Combine(directoryPath, "planeCrossing" + ".png"));
     }
 
     private static void LoadTaxiwayNodeTextures(string directoryPath)
@@ -154,14 +167,13 @@ internal static class TextureManager
 	    if (File.Exists(filePath))
 	    {
 		    byte[] data = File.ReadAllBytes(filePath);
-		    Texture2D texture2D = new Texture2D(512, 512, TextureFormat.ARGB32, true)
+		    Texture2D texture2D = new Texture2D(2, 2, TextureFormat.ARGB32, true)
 		    {
 			    filterMode = FilterMode.Bilinear,
                 wrapMode = TextureWrapMode.Clamp,
                 loadAllMips = true,
 		    };
 		    texture2D.LoadImage(data);
-            texture2D.Apply(true);
             texture2D = DownCompressor.DownscaleTextureFastGPU(texture2D);
 		    if (GameSettingManager.CompressImages)
 		    {

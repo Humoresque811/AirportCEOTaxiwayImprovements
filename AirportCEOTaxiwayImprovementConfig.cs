@@ -17,6 +17,7 @@ internal static class AirportCEOTaxiwayImprovementConfig
     internal static ConfigEntry<DownCompressor.DownscaleLevel> DownscaleLevel { get; private set; }
     internal static ConfigEntry<bool> UseTaxiwayNodeCache { get; private set; }
     internal static ConfigEntry<bool> ShowTaxiwayNodeWarning { get; private set; }
+    internal static ConfigEntry<bool> ImproveRoadMarkings { get; private set; }
 
     internal static void SetUpConfig()
     {
@@ -37,6 +38,8 @@ internal static class AirportCEOTaxiwayImprovementConfig
             "It is highly recommended to keep this option on, it is mostly just useful in development.");
         ShowTaxiwayNodeWarning = AirportCEOTaxiwayImprovements.ConfigReference.Bind("Nodes", "Show Taxiway Nodes Smoothing Warning Message", true, "Show the warning message " +
             "for taxiway node smoothing when loading into a new game. (Disable if it gets annoying)");
+        ImproveRoadMarkings = AirportCEOTaxiwayImprovements.ConfigReference.Bind("Other", "Improve Road Markings", true, "Allows you to place one way road arrows before " +
+            "taxiway crossings to add a little vehicle stop line and aircraft taxiway crossing warning sprite (without having to use stickers).");
 
         DownscaleLevel.SettingChanged += UIEdits.ShowReloadWarningMessage;
         SmoothTaxiwayNodes.SettingChanged += UIEdits.ShowReloadWarningMessage;

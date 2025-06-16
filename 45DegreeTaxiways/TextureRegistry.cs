@@ -54,6 +54,8 @@ internal static class TextureRegistry
     internal static Sprite X_4590;
     internal static Sprite X_4590_Curves;
 
+    // Other
+    internal static Sprite planeCrossing;
 
     internal static void Init()
     {
@@ -93,6 +95,8 @@ internal static class TextureRegistry
         ConcreteEntranceFastLarge = Sprite.Create(TextureManager.ConcreteEntranceFastLarge, new Rect(0, 0, TextureManager.ConcreteEntranceFastLarge.width, TextureManager.ConcreteEntranceFastLarge.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
 
         TaxiwayNodeImageServer.SetSpecials();
+
+        planeCrossing = TextureManager.CreateSingleTexture(TextureManager.planeCrossing);
     }
 
     internal static void ApplySmallTri(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)

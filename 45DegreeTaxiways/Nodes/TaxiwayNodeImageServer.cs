@@ -410,7 +410,7 @@ internal static class TaxiwayNodeImageServer
 
 	private static bool IsListTextureContentEqual(List<TextureConfiguration> list1, List<TextureConfiguration> list2)
 	{
-		if (list1.Count != list2.Count)
+		if (list1.Count != list2.Count) 
 		{
 			return false;
 		}
@@ -448,16 +448,6 @@ internal static class TaxiwayNodeImageServer
 
 	internal static void UpdateAllNodes(SaveLoadGameDataController _)
 	{
-		PlaceableStructure[] structures = BuildingController.Instance.GetArrayOfSpecificStructureType(Enums.StructureType.TaxiwayNode);
-		
-
-		foreach (PlaceableStructure structure in structures)
-		{
-			if (structure is TaxiwayNodeModel)
-			{
-				TaxiwayCenterBuilder builder = structure.GetComponent<TaxiwayCenterBuilder>();
-				builder.UpdatePiece();
-			}
-		}
+		Singleton<BuildingController>.Instance.UpdateBuilderByType<TaxiwayCenterBuilder, PlaceableStructure>(Singleton<BuildingController>.Instance.GetDynamicArrayOfSpecificStructureType(Enums.StructureType.TaxiwayNode));
 	}
 }
