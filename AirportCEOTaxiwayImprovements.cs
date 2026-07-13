@@ -48,6 +48,6 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
             ModManager.ActivateMod("84c9750c-1ce6-4d02-85d0-a17bd79501e0"); // We just quietly activate ourselves so that the textures load
         }
 
-        SaveLoadHandler.SetUpSaveLoadHandling();
+        //SaveLoadHandler.SetUpSaveLoadHandling();
     }
 }

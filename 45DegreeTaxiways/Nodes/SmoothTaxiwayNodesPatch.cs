@@ -11,7 +11,7 @@ namespace AirportCEOTaxiwayImprovements._45DegreeTaxiways;
 [HarmonyPatch]
 public static class SmoothTaxiwayNodesPatch
 {
-    private const float NEWSCALEFORSPRITES = 2.4f;
+    private const float NEWSCALEFORSPRITES = 3f;
 
     [HarmonyPatch(typeof(TaxiwayCenterBuilder), nameof(TaxiwayCenterBuilder.UpdatePiece))]
 	[HarmonyPrefix]

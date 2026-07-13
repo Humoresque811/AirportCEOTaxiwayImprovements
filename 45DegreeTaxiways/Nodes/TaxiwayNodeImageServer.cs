@@ -83,12 +83,12 @@ internal static class TaxiwayNodeImageServer
 
 			foreach (TextureConfiguration configTexture in texturesApplicable)
 			{
-				if (configTexture.textureReference == TextureManager.Straight_45)
+				if (configTexture.textureReference == TextureManager.Straight_45 && nodeLight == null)
 				{
 					TextureConfiguration nodeLightConfig = new TextureConfiguration(TextureManager.Node_Light_45, configTexture.rotationIndex, configTexture.flipHorizontally);
 					nodeLight = nodeLightConfig;
 				}
-				else if (configTexture.textureReference == TextureManager.Straight_90)
+				else if (configTexture.textureReference == TextureManager.Straight_90 && nodeLight == null)
 				{
 					TextureConfiguration nodeLightConfig = new TextureConfiguration(TextureManager.Node_Light_90, configTexture.rotationIndex, configTexture.flipHorizontally);
 					nodeLight = nodeLightConfig;
@@ -99,6 +99,7 @@ internal static class TaxiwayNodeImageServer
 					allClear = false;
 				}
 
+				
 				adjustedTextures.Add(configTexture); //Implicit conversion behind the scenes here
 			}
 
@@ -117,7 +118,7 @@ internal static class TaxiwayNodeImageServer
 
 			stopper2.Stop();
 			stopper1.Stop();
-			AirportCEOTaxiwayImprovements.TILogger.LogInfo($"Time info: stopper 1 {stopper1.ElapsedMilliseconds}, and stopper 2 {stopper2.ElapsedMilliseconds}");
+			AirportCEOTaxiwayImprovements.TILogger.LogInfo($"Time info: stopper 1: {stopper1.Elapsed.Milliseconds}ms, and stopper 2: {stopper2.Elapsed.Milliseconds}ms, mips {newSprite.texture.mipmapCount}");
 
 			rotation = 0;
 			return newSprite;

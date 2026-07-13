@@ -143,17 +143,17 @@ internal static class TextureManager
         Curve_4590_P1 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_4590_P1) + ".png")); 
         Curve_4590_P2 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_4590_P2) + ".png")); 
         Curve_4590_P3 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_4590_P3) + ".png")); 
-        Curve_4590_P4 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_4590_P4) + ".png")); 
-        Curve_4590_P5 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_4590_P5) + ".png")); 
+        //Curve_4590_P4 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_4590_P4) + ".png"));  // We don't use this texture
+        //Curve_4590_P5 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_4590_P5) + ".png"));  // We don't use this texture
 
         Curve_9090_P1 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_9090_P1) + ".png")); 
-        Curve_9090_P2 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_9090_P2) + ".png"));
+        //Curve_9090_P2 = LoadTexture(Path.Combine(directoryPath, nameof(Curve_9090_P2) + ".png")); // We don't use this texture
 
         Node_Light_45 = LoadTexture(Path.Combine(directoryPath, nameof(Node_Light_45) + ".png")); 
         Node_Light_90 = LoadTexture(Path.Combine(directoryPath, nameof(Node_Light_90) + ".png"));
 
-        Clear = new Texture2D(640, 640);
-        Color[] veryClear = new Color[640 * 640];
+        Clear = new Texture2D(512, 512);
+        Color[] veryClear = new Color[512 * 512];
         for (int i = 0; i < veryClear.Length; i++)
         {
             veryClear[i] = Color.clear;
