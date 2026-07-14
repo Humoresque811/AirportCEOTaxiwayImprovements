@@ -43,8 +43,6 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
         AirportCEOModLoader.WatermarkUtils.WatermarkUtils.Register(new AirportCEOModLoader.WatermarkUtils.WatermarkInfo("TI", "1.0", true));
         EventDispatcher.NewGameStarted += AdditionalPrefabChanges.DoModifications;
 
-        TextureLoader.DoTests();        
-
         if (AirportCEOTaxiwayImprovementConfig.AutomaticallyTurnModOn.Value)
         {
             ModManager.ActivateMod("84c9750c-1ce6-4d02-85d0-a17bd79501e0"); // We just quietly activate ourselves so that the textures load

@@ -128,19 +128,6 @@ internal class TextureLoader
         AirportCEOTaxiwayImprovements.TILogger.LogMessage($"Completed texture loading successfully in {AirportCEOTaxiwayImprovements.debugStopwatch.ElapsedMilliseconds}ms!");
     }
 
-    internal static void DoTests()
-    {
-        //Stopwatch tester = new();
-        //tester.Start();
-        //LoadTexture("C:\\My Stuff\\ACEO Texture Work\\Airport CEO Textures\\Rebuilt 45 Degree Mod\\AirporCEOTaxiwayImprovements\\TaxiwayEdges\\C_HorizontalCurveOutOf.png");
-        //tester.Stop();
-        //int defaultTex = (int)tester.ElapsedMilliseconds;
-        //tester.Restart();
-        //LoadTextureDDS("C:\\My Stuff\\ACEO Texture Work\\Airport CEO Textures\\Rebuilt 45 Degree Mod\\AirporCEOTaxiwayImprovements\\TaxiwayEdges\\C_HorizontalCurveOutOf.dds");
-        //tester.Stop();
-        //AirportCEOTaxiwayImprovements.TILogger.LogInfo($"PNG: {defaultTex}ms, DDS: {tester.ElapsedMilliseconds}ms");
-    }
-
     private static Texture2D LoadTextureDDS(string filePath)
     {
         if (!File.Exists(filePath))
@@ -170,8 +157,12 @@ internal class TextureLoader
             _ => throw new Exception($"Unsupported DDS format '{fourCC}'.")
         };
 
-        Texture2D tex = new Texture2D(width, height, format, mipCount > 1);
-        tex.mipMapBias = -1;
+        Texture2D tex = new Texture2D(width, height, format, mipCount > 1)
+        {
+            wrapMode = TextureWrapMode.Clamp,
+            filterMode = FilterMode.Trilinear,
+            mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value
+        };
 
         const int dataOffset = 128;
 
@@ -180,8 +171,6 @@ internal class TextureLoader
         tex.LoadRawTextureData(textureData);
 
         tex.Apply(true, true);
-        tex.wrapMode = TextureWrapMode.Clamp;
-        tex.filterMode = FilterMode.Bilinear;
 
         return tex;    
     }

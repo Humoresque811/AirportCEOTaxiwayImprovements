@@ -13,7 +13,7 @@ internal static class AirportCEOTaxiwayImprovementConfig
     internal static ConfigEntry<bool> SmoothDiagonals { get; private set; }
     internal static ConfigEntry<string> AlternateLoadingPath { get; private set; }
     internal static ConfigEntry<bool> AutomaticallyTurnModOn { get; private set; }
-    internal static ConfigEntry<int> MipMapBias { get; private set; }
+    internal static ConfigEntry<float> MipMapBias { get; private set; }
 
     internal static void SetUpConfig()
     {
@@ -24,9 +24,9 @@ internal static class AirportCEOTaxiwayImprovementConfig
             "may cause larger bugs if not all textures are found in the directory.");
         AutomaticallyTurnModOn = AirportCEOTaxiwayImprovements.ConfigReference.Bind("General", "Automatically Turn Mod On", true, "Automatically turn on (enable) the ACEO mod portion" +
             " of the mod loader so it works properly. You should not have to touch this setting.");
-        MipMapBias = AirportCEOTaxiwayImprovements.ConfigReference.Bind("General", "MipMap Bias (READ HOVER DESCRIPTION)", -1, new ConfigDescription(
-            "This option lets you adjust how the taxiway edge textures are rendered. Leaving this value at -1 is HIGHLY RECOMMENDED. You can adjust this while in game looking at taxiways to find the best value for you." +
-            "\n-2 = Best look for screenshots\n-1 = Best overall look/function\n0 = Least flicker when moving in game", new AcceptableValueRange<int>(-2, 0)));
+        MipMapBias = AirportCEOTaxiwayImprovements.ConfigReference.Bind("General", "MipMap Bias (READ HOVER DESCRIPTION)", -1.2f, new ConfigDescription(
+            "This option lets you adjust how the taxiway edge textures are rendered. You can adjust this while in game looking at taxiways to find the best value for you." +
+            "\n-2 = Best look for screenshots\n-1 = Best overall look/function\n0 = Least flicker when moving in game", new AcceptableValueRange<float>(-2.5f, 0)));
         MipMapBias.SettingChanged += TextureRegistry.UpdateMipBias;
     }
 }
