@@ -5,6 +5,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using System.Diagnostics;
 
 namespace AirportCEOTaxiwayImprovements;
 
@@ -16,6 +17,8 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
     internal static Harmony Harmony { get; private set; }
     internal static ManualLogSource TILogger { get; private set; }
     internal static ConfigFile ConfigReference {  get; private set; }
+
+    internal static Stopwatch debugStopwatch { get; private set; } = new();
 
     private void Awake()
     {
@@ -36,10 +39,11 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
 
     private void Start()
     {
-        AirportCEOModLoader.WorkshopUtils.WorkshopUtils.Register("TaxiwaySprites", TextureManager.LoadTextures);
+        AirportCEOModLoader.WorkshopUtils.WorkshopUtils.Register("TaxiwaySprites", TextureLoader.LoadTextures);
         AirportCEOModLoader.WatermarkUtils.WatermarkUtils.Register(new AirportCEOModLoader.WatermarkUtils.WatermarkInfo("TI", "1.0", true));
         EventDispatcher.NewGameStarted += AdditionalPrefabChanges.DoModifications;
 
+        TextureLoader.DoTests();        
 
         if (AirportCEOTaxiwayImprovementConfig.AutomaticallyTurnModOn.Value)
         {
