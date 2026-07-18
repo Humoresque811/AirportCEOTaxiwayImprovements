@@ -41,41 +41,45 @@ internal static class TextureRegistry
 
     internal static void Init()
     {
-        ConcreteVerticalCurveInto = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.VerticalCurveInto);
-        ConcreteHorizontalCurveInto = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.HorizontalCurveInto);
+        AsphaltVerticalCurveInto = CreateSprite(TextureLoader.A_VerticalCurveInto);
+        AsphaltHorizontalCurveInto = CreateSprite(TextureLoader.A_HorizontalCurveInto);
 
-        ConcreteVerticalCurveOutOf = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.VerticalCurveOutOf);
-        ConcreteHorizontalCurveOutOf = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.HorizontalCurveOutOf);
+        AsphaltVerticalCurveOutOf = CreateSprite(TextureLoader.A_VerticalCurveOutOf);
+        AsphaltHorizontalCurveOutOf = CreateSprite(TextureLoader.A_HorizontalCurveOutOf);
 
-        ConcreteDiagonalHalf = TextureManager.CombineTextures(TextureManager.ConcreteTri, TextureManager.DiagonalHalf);
-        ConcreteDiagonalFull = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.DiagonalFull);
+        AsphaltDiagonalHalf = CreateSprite(TextureLoader.A_DiagonalHalf);
+        AsphaltDiagonalFull = CreateSprite(TextureLoader.A_DiagonalFull);
 
-        AsphaltVerticalCurveInto = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.VerticalCurveInto);
-        AsphaltHorizontalCurveInto = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.HorizontalCurveInto);
+        AsphaltEndCap = CreateSprite(TextureLoader.A_EndCap);
 
-        AsphaltVerticalCurveOutOf = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.VerticalCurveOutOf);
-        AsphaltHorizontalCurveOutOf = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.HorizontalCurveOutOf);
+        ConcreteVerticalCurveInto = CreateSprite(TextureLoader.C_VerticalCurveInto);
+        ConcreteHorizontalCurveInto = CreateSprite(TextureLoader.C_HorizontalCurveInto);
 
-        AsphaltDiagonalHalf = TextureManager.CombineTextures(TextureManager.AsphaltTri, TextureManager.DiagonalHalf);
-        AsphaltDiagonalFull = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.DiagonalFull);
+        ConcreteVerticalCurveOutOf = CreateSprite(TextureLoader.C_VerticalCurveOutOf);
+        ConcreteHorizontalCurveOutOf = CreateSprite(TextureLoader.C_HorizontalCurveOutOf);
 
-        AsphaltEndCap = TextureManager.CombineTextures(TextureManager.AsphaltFull, TextureManager.EndCap);
-        ConcreteEndCap = TextureManager.CombineTextures(TextureManager.ConcreteFull, TextureManager.EndCap);
+        ConcreteDiagonalHalf = CreateSprite(TextureLoader.C_DiagonalHalf);
+        ConcreteDiagonalFull = CreateSprite(TextureLoader.C_DiagonalFull);
+
+        ConcreteEndCap = CreateSprite(TextureLoader.C_EndCap);
+
+        TextureLoader.AsphaltEntranceFast.wrapMode = TextureWrapMode.Clamp;
+        AsphaltEntranceFast = Sprite.Create(TextureLoader.AsphaltEntranceFast, new Rect(0, 0, TextureLoader.AsphaltEntranceFast.width, TextureLoader.AsphaltEntranceFast.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
+
+        TextureLoader.AsphaltEntranceFastLarge.wrapMode = TextureWrapMode.Clamp;
+        AsphaltEntranceFastLarge = Sprite.Create(TextureLoader.AsphaltEntranceFastLarge, new Rect(0, 0, TextureLoader.AsphaltEntranceFastLarge.width, TextureLoader.AsphaltEntranceFastLarge.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
 
 
-        TextureManager.AsphaltEntranceFast.wrapMode = TextureWrapMode.Clamp;
-        AsphaltEntranceFast = Sprite.Create(TextureManager.AsphaltEntranceFast, new Rect(0, 0, TextureManager.AsphaltEntranceFast.width, TextureManager.AsphaltEntranceFast.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
+        TextureLoader.ConcreteEntranceFast.wrapMode = TextureWrapMode.Clamp;
+        ConcreteEntranceFast = Sprite.Create(TextureLoader.ConcreteEntranceFast, new Rect(0, 0, TextureLoader.ConcreteEntranceFast.width, TextureLoader.ConcreteEntranceFast.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
 
-        TextureManager.AsphaltEntranceFastLarge.wrapMode = TextureWrapMode.Clamp;
-        AsphaltEntranceFastLarge = Sprite.Create(TextureManager.AsphaltEntranceFastLarge, new Rect(0, 0, TextureManager.AsphaltEntranceFastLarge.width, TextureManager.AsphaltEntranceFastLarge.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
+        TextureLoader.ConcreteEntranceFastLarge.wrapMode = TextureWrapMode.Clamp;
+        ConcreteEntranceFastLarge = Sprite.Create(TextureLoader.ConcreteEntranceFastLarge, new Rect(0, 0, TextureLoader.ConcreteEntranceFastLarge.width, TextureLoader.ConcreteEntranceFastLarge.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
 
-
-        TextureManager.ConcreteEntranceFast.wrapMode = TextureWrapMode.Clamp;
-        ConcreteEntranceFast = Sprite.Create(TextureManager.ConcreteEntranceFast, new Rect(0, 0, TextureManager.ConcreteEntranceFast.width, TextureManager.ConcreteEntranceFast.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
-
-        TextureManager.ConcreteEntranceFastLarge.wrapMode = TextureWrapMode.Clamp;
-        ConcreteEntranceFastLarge = Sprite.Create(TextureManager.ConcreteEntranceFastLarge, new Rect(0, 0, TextureManager.ConcreteEntranceFastLarge.width, TextureManager.ConcreteEntranceFastLarge.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
-
+    }
+    internal static Sprite CreateSprite(Texture2D tex)
+    {
+        return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one / 2f, 256, 0u, SpriteMeshType.FullRect);
     }
 
     internal static void ApplySmallTri(Enums.FoundationType foundationType, int rotation, TaxiwayBuilderNode node)

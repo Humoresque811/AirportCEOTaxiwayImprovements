@@ -1,14 +1,16 @@
 ﻿using AirportCEOModLoader;
 using AirportCEOModLoader.SaveLoadUtils;
+using AirportCEOModLoader.WorkshopUtils;
 using AirportCEOTaxiwayImprovements._45DegreeTaxiways;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using System.Diagnostics;
 
 namespace AirportCEOTaxiwayImprovements;
 
-[BepInPlugin("org.airportceotaxiwayimprovements.humoresque", "AirportCEO Taxiway Improvements", PluginInfo.PLUGIN_VERSION)]
+[BepInPlugin("org.airportceotaxiwayimprovements.humoresque", MODNAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency("org.airportceomodloader.humoresque")]
 public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
 {
@@ -16,6 +18,10 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
     internal static Harmony Harmony { get; private set; }
     internal static ManualLogSource TILogger { get; private set; }
     internal static ConfigFile ConfigReference {  get; private set; }
+
+
+    internal const string MODNAME = "AirportCEO Taxiway Improvements";
+    internal static Stopwatch debugStopwatch { get; private set; } = new();
 
     private void Awake()
     {
@@ -36,10 +42,9 @@ public class AirportCEOTaxiwayImprovements : BaseUnityPlugin
 
     private void Start()
     {
-        AirportCEOModLoader.WorkshopUtils.WorkshopUtils.Register("TaxiwaySprites", TextureManager.LoadTextures);
-        AirportCEOModLoader.WatermarkUtils.WatermarkUtils.Register(new AirportCEOModLoader.WatermarkUtils.WatermarkInfo("TI", "1.0", true));
+        WorkshopUtils.Register("TaxiwaySprites", TextureLoader.LoadTextures);
+        AirportCEOModLoader.WatermarkUtils.WatermarkUtils.Register(new AirportCEOModLoader.WatermarkUtils.WatermarkInfo("TI", "1.1", true));
         EventDispatcher.NewGameStarted += AdditionalPrefabChanges.DoModifications;
-
 
         if (AirportCEOTaxiwayImprovementConfig.AutomaticallyTurnModOn.Value)
         {
