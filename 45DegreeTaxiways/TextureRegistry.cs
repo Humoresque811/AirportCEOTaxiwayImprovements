@@ -39,24 +39,6 @@ internal static class TextureRegistry
     internal static Sprite AsphaltEndCap;
     internal static Sprite ConcreteEndCap;
 
-    internal static void UpdateMipBias(object sender, EventArgs e)
-    {
-        ConcreteVerticalCurveInto.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        ConcreteHorizontalCurveInto.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        ConcreteVerticalCurveOutOf.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        ConcreteHorizontalCurveOutOf.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        ConcreteDiagonalHalf.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        ConcreteDiagonalFull.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        AsphaltVerticalCurveInto.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        AsphaltHorizontalCurveInto.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        AsphaltVerticalCurveOutOf.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        AsphaltHorizontalCurveOutOf.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        AsphaltDiagonalHalf.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        AsphaltDiagonalFull.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        AsphaltEndCap.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-        ConcreteEndCap.texture.mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value;
-    }
-
     internal static void Init()
     {
         AsphaltVerticalCurveInto = CreateSprite(TextureLoader.A_VerticalCurveInto);
@@ -80,28 +62,6 @@ internal static class TextureRegistry
         ConcreteDiagonalFull = CreateSprite(TextureLoader.C_DiagonalFull);
 
         ConcreteEndCap = CreateSprite(TextureLoader.C_EndCap);
-
-        //ConcreteVerticalCurveInto = TextureLoader.CombineTextures(TextureLoader.ConcreteFull, TextureLoader.VerticalCurveInto);
-        //ConcreteHorizontalCurveInto = TextureLoader.CombineTextures(TextureLoader.ConcreteFull, TextureLoader.HorizontalCurveInto);
-
-        //ConcreteVerticalCurveOutOf = TextureLoader.CombineTextures(TextureLoader.ConcreteFull, TextureLoader.VerticalCurveOutOf);
-        //ConcreteHorizontalCurveOutOf = TextureLoader.CombineTextures(TextureLoader.ConcreteFull, TextureLoader.HorizontalCurveOutOf);
-
-        //ConcreteDiagonalHalf = TextureLoader.CombineTextures(TextureLoader.ConcreteTri, TextureLoader.DiagonalHalf);
-        //ConcreteDiagonalFull = TextureLoader.CombineTextures(TextureLoader.ConcreteFull, TextureLoader.DiagonalFull);
-
-        //AsphaltVerticalCurveInto = TextureLoader.CombineTextures(TextureLoader.AsphaltFull, TextureLoader.VerticalCurveInto);
-        //AsphaltHorizontalCurveInto = TextureLoader.CombineTextures(TextureLoader.AsphaltFull, TextureLoader.HorizontalCurveInto);
-
-        //AsphaltVerticalCurveOutOf = TextureLoader.CombineTextures(TextureLoader.AsphaltFull, TextureLoader.VerticalCurveOutOf);
-        //AsphaltHorizontalCurveOutOf = TextureLoader.CombineTextures(TextureLoader.AsphaltFull, TextureLoader.HorizontalCurveOutOf);
-
-        //AsphaltDiagonalHalf = TextureLoader.CombineTextures(TextureLoader.AsphaltTri, TextureLoader.DiagonalHalf);
-        //AsphaltDiagonalFull = TextureLoader.CombineTextures(TextureLoader.AsphaltFull, TextureLoader.DiagonalFull);
-
-        //AsphaltEndCap = TextureLoader.CombineTextures(TextureLoader.AsphaltFull, TextureLoader.EndCap);
-        //ConcreteEndCap = TextureLoader.CombineTextures(TextureLoader.ConcreteFull, TextureLoader.EndCap);
-
 
         TextureLoader.AsphaltEntranceFast.wrapMode = TextureWrapMode.Clamp;
         AsphaltEntranceFast = Sprite.Create(TextureLoader.AsphaltEntranceFast, new Rect(0, 0, TextureLoader.AsphaltEntranceFast.width, TextureLoader.AsphaltEntranceFast.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);

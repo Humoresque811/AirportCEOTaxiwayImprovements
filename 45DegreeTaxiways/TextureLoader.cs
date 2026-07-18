@@ -1,6 +1,8 @@
-﻿using Epic.OnlineServices.AntiCheatClient;
+﻿using AirportCEOModLoader.SaveLoadUtils;
+using Epic.OnlineServices.AntiCheatClient;
 using Mono.Cecil;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -38,24 +40,6 @@ internal class TextureLoader
     internal static Texture2D C_EndCap;
 
     // Old Textures ----------------------------------
-
-    internal static Texture2D VerticalCurveInto;
-    internal static Texture2D HorizontalCurveInto;
-
-    internal static Texture2D VerticalCurveOutOf;
-    internal static Texture2D HorizontalCurveOutOf;
-
-    internal static Texture2D DiagonalHalf;
-    internal static Texture2D DiagonalFull;
-
-    internal static Texture2D EndCap;
-
-    internal static Texture2D ConcreteFull;
-    internal static Texture2D ConcreteTri;
-
-    internal static Texture2D AsphaltFull;
-    internal static Texture2D AsphaltTri;
-
     // Runway Exits
 
     internal static Texture2D AsphaltEntranceFast;
@@ -65,8 +49,11 @@ internal class TextureLoader
     internal static Texture2D ConcreteEntranceFastLarge;
 
 
-    internal static void LoadTextures(string directoryPath)
+    internal static IEnumerator LoadTextures(string directoryPath)
     {
+        CoroutineEventDispatcher.GetTextUpdater()($"{AirportCEOTaxiwayImprovements.MODNAME}: Loading Textures...", 40);
+        yield return null;
+
         AirportCEOTaxiwayImprovements.debugStopwatch.Start();
         if (!string.IsNullOrEmpty(AirportCEOTaxiwayImprovementConfig.AlternateLoadingPath.Value))
         {
@@ -78,54 +65,46 @@ internal class TextureLoader
         string taxiwayEdgePath = Path.Combine(directoryPath, "TaxiwayEdges");
         string runwayExitPath = Path.Combine(directoryPath, "RunwayExits");
 
-        A_VerticalCurveInto = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_VerticalCurveInto.dds"));
-        A_HorizontalCurveInto = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_HorizontalCurveInto.dds"));
+        yield return null;
 
-        A_VerticalCurveOutOf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_VerticalCurveOutOf.dds"));
-        A_HorizontalCurveOutOf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_HorizontalCurveOutOf.dds"));
+        A_VerticalCurveInto = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_VerticalCurveIntoF.dds"));
+        A_HorizontalCurveInto = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_HorizontalCurveIntoF.dds"));
 
-        A_DiagonalHalf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_DiagonalHalf.dds"));
-        A_DiagonalFull = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_DiagonalFull.dds"));
+        A_VerticalCurveOutOf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_VerticalCurveOutOfF.dds"));
+        A_HorizontalCurveOutOf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_HorizontalCurveOutOfF.dds"));
 
-        A_EndCap = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_EndCap.dds"));
+        A_DiagonalHalf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_DiagonalHalfF.dds"));
+        A_DiagonalFull = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_DiagonalFullF.dds"));
 
-        C_VerticalCurveInto = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_VerticalCurveInto.dds"));
-        C_HorizontalCurveInto = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_HorizontalCurveInto.dds"));
+        A_EndCap = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_EndCapF.dds"));
 
-        C_VerticalCurveOutOf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_VerticalCurveOutOf.dds"));
-        C_HorizontalCurveOutOf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_HorizontalCurveOutOf.dds"));
+        C_VerticalCurveInto = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_VerticalCurveIntoF.dds"));
+        C_HorizontalCurveInto = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_HorizontalCurveIntoF.dds"));
 
-        C_DiagonalHalf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_DiagonalHalf.dds"));
-        C_DiagonalFull = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_DiagonalFull.dds"));
+        C_VerticalCurveOutOf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_VerticalCurveOutOfF.dds"));
+        C_HorizontalCurveOutOf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_HorizontalCurveOutOfF.dds"));
 
-        C_EndCap = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_EndCap.dds"));
+        C_DiagonalHalf = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_DiagonalHalfF.dds"));
+        C_DiagonalFull = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_DiagonalFullF.dds"));
 
-        //VerticalCurveInto = LoadTexture(Path.Combine(directoryPath, "VerticalCurveInto.png"));
-        //HorizontalCurveInto = LoadTexture(Path.Combine(directoryPath, "HorizontalCurveInto.png"));
+        C_EndCap = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_EndCapF.dds"));
 
-        //VerticalCurveOutOf = LoadTexture(Path.Combine(directoryPath, "VerticalCurveOutOf.png"));
-        //HorizontalCurveOutOf = LoadTexture(Path.Combine(directoryPath, "HorizontalCurveOutOf.png"));
-
-        //DiagonalHalf = LoadTexture(Path.Combine(directoryPath, "DiagonalHalf.png"));
-        //DiagonalFull = LoadTexture(Path.Combine(directoryPath, "DiagonalFull.png"));
-
-        //ConcreteFull = LoadTexture(Path.Combine(directoryPath, "ConcreteFull.png"));
-        //ConcreteTri = LoadTexture(Path.Combine(directoryPath, "ConcreteTri.png"));
-
-        //AsphaltFull = LoadTexture(Path.Combine(directoryPath, "AsphaltFull.png"));
-        //AsphaltTri = LoadTexture(Path.Combine(directoryPath, "AsphaltTri.png"));
-
-        //EndCap = LoadTexture(Path.Combine(directoryPath, "EndCap.png"));
+        yield return null;
 
         AsphaltEntranceFast = LoadTexture(Path.Combine(runwayExitPath, "FastAsphalt.png"));
         AsphaltEntranceFastLarge = LoadTexture(Path.Combine(runwayExitPath, "FastAsphaltLarge.png"));
         ConcreteEntranceFast = LoadTexture(Path.Combine(runwayExitPath, "FastConcrete.png"));
         ConcreteEntranceFastLarge = LoadTexture(Path.Combine(runwayExitPath, "FastConcreteLarge.png"));
 
+        CoroutineEventDispatcher.GetTextUpdater()($"{AirportCEOTaxiwayImprovements.MODNAME}: Processing Textures...", 80);
+        yield return null;
+
         TextureRegistry.Init();
         AirportCEOTaxiwayImprovements.debugStopwatch.Stop();
 
         AirportCEOTaxiwayImprovements.TILogger.LogMessage($"Completed texture loading successfully in {AirportCEOTaxiwayImprovements.debugStopwatch.ElapsedMilliseconds}ms!");
+        CoroutineEventDispatcher.GetTextUpdater()($"{AirportCEOTaxiwayImprovements.MODNAME}: Loading Complete", 100);
+        yield return new WaitForSecondsRealtime(0.2f);
     }
 
     private static Texture2D LoadTextureDDS(string filePath)
@@ -161,7 +140,6 @@ internal class TextureLoader
         {
             wrapMode = TextureWrapMode.Clamp,
             filterMode = FilterMode.Trilinear,
-            mipMapBias = AirportCEOTaxiwayImprovementConfig.MipMapBias.Value
         };
 
         const int dataOffset = 128;
