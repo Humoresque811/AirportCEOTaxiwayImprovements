@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace AirportCEOTaxiwayImprovements._45DegreeTaxiways;
+namespace AirportCEOTaxiwayImprovements.TextureManagment;
 
 internal class TextureLoader
 {
@@ -39,6 +39,9 @@ internal class TextureLoader
 
     internal static Texture2D C_EndCap;
 
+    // Road Markings
+    internal static Texture2D PlaneCrossing;
+
     // Old Textures ----------------------------------
     // Runway Exits
 
@@ -64,6 +67,7 @@ internal class TextureLoader
 
         string taxiwayEdgePath = Path.Combine(directoryPath, "TaxiwayEdges");
         string runwayExitPath = Path.Combine(directoryPath, "RunwayExits");
+        string roadMarkingsPath = Path.Combine(directoryPath, "RoadMarkings");
 
         yield return null;
 
@@ -77,6 +81,8 @@ internal class TextureLoader
         A_DiagonalFull = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_DiagonalFullF.dds"));
 
         A_EndCap = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "A_EndCapF.dds"));
+
+        yield return null;
 
         C_VerticalCurveInto = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_VerticalCurveIntoF.dds"));
         C_HorizontalCurveInto = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_HorizontalCurveIntoF.dds"));
@@ -95,6 +101,9 @@ internal class TextureLoader
         AsphaltEntranceFastLarge = LoadTexture(Path.Combine(runwayExitPath, "FastAsphaltLarge.png"));
         ConcreteEntranceFast = LoadTexture(Path.Combine(runwayExitPath, "FastConcrete.png"));
         ConcreteEntranceFastLarge = LoadTexture(Path.Combine(runwayExitPath, "FastConcreteLarge.png"));
+
+        yield return null;
+        PlaneCrossing = LoadTextureDDS(Path.Combine(roadMarkingsPath, "PlaneCrossing.dds"));
 
         CoroutineEventDispatcher.GetTextUpdater()($"{AirportCEOTaxiwayImprovements.MODNAME}: Processing Textures...", 80);
         yield return null;

@@ -13,6 +13,7 @@ internal static class AirportCEOTaxiwayImprovementConfig
     internal static ConfigEntry<bool> SmoothDiagonals { get; private set; }
     internal static ConfigEntry<string> AlternateLoadingPath { get; private set; }
     internal static ConfigEntry<bool> AutomaticallyTurnModOn { get; private set; }
+    internal static ConfigEntry<bool> ImproveRoadMarkings { get; private set; }
 
     internal static void SetUpConfig()
     {
@@ -23,5 +24,7 @@ internal static class AirportCEOTaxiwayImprovementConfig
             "may cause larger bugs if not all textures are found in the directory.");
         AutomaticallyTurnModOn = AirportCEOTaxiwayImprovements.ConfigReference.Bind("General", "Automatically Turn Mod On", true, "Automatically turn on (enable) the ACEO mod portion" +
             " of the mod loader so it works properly. You should not have to touch this setting.");
+        ImproveRoadMarkings = AirportCEOTaxiwayImprovements.ConfigReference.Bind("Other", "Improve Road Markings", true, "Allows you to place one way road arrows before " +
+            "taxiway crossings to add a little vehicle stop line and aircraft taxiway crossing warning sprite (without having to use stickers).");
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace AirportCEOTaxiwayImprovements._45DegreeTaxiways;
+namespace AirportCEOTaxiwayImprovements.TextureManagment;
 
 internal static class TextureRegistry
 {
@@ -39,6 +39,8 @@ internal static class TextureRegistry
     internal static Sprite AsphaltEndCap;
     internal static Sprite ConcreteEndCap;
 
+    internal static Sprite PlaneCrossing;
+
     internal static void Init()
     {
         AsphaltVerticalCurveInto = CreateSprite(TextureLoader.A_VerticalCurveInto);
@@ -62,6 +64,8 @@ internal static class TextureRegistry
         ConcreteDiagonalFull = CreateSprite(TextureLoader.C_DiagonalFull);
 
         ConcreteEndCap = CreateSprite(TextureLoader.C_EndCap);
+
+        PlaneCrossing = CreateSprite(TextureLoader.PlaneCrossing);
 
         TextureLoader.AsphaltEntranceFast.wrapMode = TextureWrapMode.Clamp;
         AsphaltEntranceFast = Sprite.Create(TextureLoader.AsphaltEntranceFast, new Rect(0, 0, TextureLoader.AsphaltEntranceFast.width, TextureLoader.AsphaltEntranceFast.height), Vector2.one / 2f, 128, 0u, SpriteMeshType.FullRect);
