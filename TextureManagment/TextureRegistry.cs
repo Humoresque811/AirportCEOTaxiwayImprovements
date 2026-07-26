@@ -39,6 +39,7 @@ internal static class TextureRegistry
     internal static Sprite AsphaltEndCap;
     internal static Sprite ConcreteEndCap;
 
+    // Road Markings
     internal static Sprite PlaneCrossing;
 
     internal static void Init()
@@ -83,6 +84,7 @@ internal static class TextureRegistry
     }
     internal static Sprite CreateSprite(Texture2D tex)
     {
+        tex.Apply(false, true);
         return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one / 2f, 256, 0u, SpriteMeshType.FullRect);
     }
 

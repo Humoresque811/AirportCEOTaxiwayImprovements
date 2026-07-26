@@ -42,6 +42,12 @@ internal class TextureLoader
     // Road Markings
     internal static Texture2D PlaneCrossing;
 
+    // Taxiway Nodes
+    internal static Texture2D Node_4545_Curve;
+    internal static Texture2D Node_4545_Straight;
+    internal static Texture2D Node_9045;
+    internal static Texture2D Node_9090;
+
     // Old Textures ----------------------------------
     // Runway Exits
 
@@ -66,6 +72,7 @@ internal class TextureLoader
         AirportCEOTaxiwayImprovements.TILogger.LogInfo($"Path to load textures {directoryPath}");
 
         string taxiwayEdgePath = Path.Combine(directoryPath, "TaxiwayEdges");
+        string taxiwayNodePath = Path.Combine(directoryPath, "TaxiwayNodes");
         string runwayExitPath = Path.Combine(directoryPath, "RunwayExits");
         string roadMarkingsPath = Path.Combine(directoryPath, "RoadMarkings");
 
@@ -95,6 +102,7 @@ internal class TextureLoader
 
         C_EndCap = LoadTextureDDS(Path.Combine(taxiwayEdgePath, "C_EndCapF.dds"));
 
+        CoroutineEventDispatcher.GetTextUpdater()($"{AirportCEOTaxiwayImprovements.MODNAME}: Loading Textures...", 60);
         yield return null;
 
         AsphaltEntranceFast = LoadTexture(Path.Combine(runwayExitPath, "FastAsphalt.png"));
@@ -104,6 +112,12 @@ internal class TextureLoader
 
         yield return null;
         PlaneCrossing = LoadTextureDDS(Path.Combine(roadMarkingsPath, "PlaneCrossing.dds"));
+
+        yield return null;
+        Node_4545_Curve = LoadTexture(Path.Combine(taxiwayNodePath, "Node_4545_Curve.png"));
+        Node_4545_Straight = LoadTexture(Path.Combine(taxiwayNodePath, "Node_4545_Straight.png"));
+        Node_9045 = LoadTexture(Path.Combine(taxiwayNodePath, "Node_9045.png"));
+        Node_9090 = LoadTexture(Path.Combine(taxiwayNodePath, "Node_9090.png"));
 
         CoroutineEventDispatcher.GetTextUpdater()($"{AirportCEOTaxiwayImprovements.MODNAME}: Processing Textures...", 80);
         yield return null;
@@ -157,7 +171,7 @@ internal class TextureLoader
         Buffer.BlockCopy(file, dataOffset, textureData, 0, textureData.Length);
         tex.LoadRawTextureData(textureData);
 
-        tex.Apply(true, true);
+        tex.Apply(true, false);
 
         return tex;    
     }
@@ -165,70 +179,27 @@ internal class TextureLoader
     private static Texture2D LoadTexture(string filePath)
     {
         Texture2D result = null;
-	    if (File.Exists(filePath))
-	    {
-		    byte[] data = File.ReadAllBytes(filePath);
-		    Texture2D texture2D = new Texture2D(2, 2, TextureFormat.ARGB32, true)
-		    {
-			    filterMode = FilterMode.Bilinear,
+        if (File.Exists(filePath))
+        {
+            byte[] data = File.ReadAllBytes(filePath);
+            Texture2D texture2D = new Texture2D(2, 2, TextureFormat.ARGB32, true)
+            {
+                filterMode = FilterMode.Trilinear,
                 wrapMode = TextureWrapMode.Clamp,
                 loadAllMips = true,
-		    };
-		    texture2D.LoadImage(data);
-		    if (GameSettingManager.CompressImages)
-		    {
-			    texture2D.Compress(highQuality: true);
-		    }
+            };
+            texture2D.LoadImage(data);
+            texture2D.Apply(true, false);
+            if (GameSettingManager.CompressImages)
+            {
+                texture2D.Compress(highQuality: true);
+            }
             result = texture2D;
-	    }
+        }
         else
         {
             AirportCEOTaxiwayImprovements.TILogger.LogError("File not found!");
         }
-	    return result;
-    }
-    internal static Sprite CombineTextures(Texture2D baseTex, Texture2D topTex)
-    {
-        Resources.UnloadUnusedAssets();
-
-        if (baseTex.width != topTex.width || baseTex.height != topTex.height)
-        {
-            return Sprite.Create(baseTex, new Rect(0, 0, baseTex.width, baseTex.height), Vector2.one / 2f, 100, 0u, SpriteMeshType.FullRect);
-        }
-
-        Texture2D emptyTex = new Texture2D(baseTex.width, baseTex.height);
-        for (int x1 = 0; x1 < emptyTex.width; x1++)
-        {
-            for (int y1 = 0; y1 < emptyTex.height; y1++)
-            {
-                emptyTex.SetPixel(x1, y1, Color.clear);
-            }
-        }
-
-
-        for (int x = 0; x < baseTex.width; x++)
-        {
-            for (int y = 0; y < baseTex.height; y++)
-            {
-                if (topTex.GetPixel(x, y).a != 0)
-                {
-                    emptyTex.SetPixel(x, y, topTex.GetPixel(x, y));
-                    continue;
-                }
-                if (baseTex.GetPixel(x, y).a != 0)
-                {
-                    emptyTex.SetPixel(x, y, baseTex.GetPixel(x, y));
-                    continue;
-                }
-
-                emptyTex.SetPixel(x, y, new Color(0, 0, 0, 0));
-            }
-        }
-
-        emptyTex.Apply(true, true);
-        emptyTex.filterMode = FilterMode.Bilinear;
-        emptyTex.wrapMode = TextureWrapMode.Clamp;
-        Sprite sprite = Sprite.Create(emptyTex, new Rect(0, 0, emptyTex.width, emptyTex.height), Vector2.one / 2f, 256, 0u, SpriteMeshType.FullRect);
-        return sprite;
+        return result;
     }
 }
